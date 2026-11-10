@@ -45,6 +45,7 @@ streamlit run app.py
 | policy | Tra cứu quy định, chính sách nghiên cứu và bảo mật nội bộ | không |
 | papers | Tìm kiếm bài báo khoa học trên kho arXiv theo từ khóa | không |
 | paper_text | Tải và trích xuất văn bản từ bài báo arXiv qua ID/URL | không |
+| dedupe_sources | Loại nguồn có URL trùng trong danh sách đã thu thập, giữ bản đầu tiên và thứ tự ban đầu | có, CP3 |
 
 ### A3. Câu hỏi mẫu để thử
 
@@ -61,6 +62,8 @@ Nhóm đã tối ưu agent theo vòng lặp kiểm chứng dựa trên bằng ch
 - **Vòng v0 → v1 (`artifacts/system_prompt.md`):** Loại bỏ toàn bộ các chỉ dẫn xấu cố ý của starter prompt (như ép giải quyết trong 1 bước duy nhất, tự đoán mò tài khoản/URL khi thiếu, tự ý gửi tin mà không xin phép). Thiết lập nguyên tắc cốt lõi: hỏi lại qua `clarify` khi thiếu thông tin quan trọng hoặc khi cần xin xác nhận trước các hành động ghi (`send`). Kết quả tăng từ 0.65 lên 0.80.
 - **Vòng v1 → v2 (`artifacts/tools.yaml`):** Viết lại toàn bộ phần `description` của các tool, chỉ rõ khi nào nên dùng và khi nào KHÔNG nên dùng (phân định rõ ràng giữa `timeline` cho tài khoản cá nhân và `social_search` cho chủ đề chung). Bổ sung quy ước chuẩn trích xuất tham số: tham số `query` chỉ lấy từ khóa chính (tránh nhồi nhét "news", "today" vì đã có `topic` và `timeframe`), quy ước `screenname` không chứa ký tự `@`. Kết quả tăng từ 0.80 lên 0.90.
 - **Vòng v2 → v3 (`artifacts/system_prompt.md`):** Xử lý triệt để 2 lỗi còn lại từ v2: (1) Khắc phục lỗi boundary ở action `send` bằng cách yêu cầu bắt buộc gọi `clarify` với tham số `response_type="yes_no"`; (2) Tối ưu hóa khả năng xử lý ngữ cảnh đa lượt (Multi-turn Context & Carryover) — tích hợp và duy trì thông tin từ các lượt hội thoại trước (như tên tài khoản, số lượng limit), khi người dùng đã cung cấp đủ thông tin thì agent lập tức gọi tool thực thi (`timeline`) mà không hỏi lại. Kết quả đạt 1.00 (20/20 test cases pass).
+
+- **CP3 — Loại nguồn trùng:** Agent dùng `dedupe_sources` sau khi đã thu thập nguồn và trước khi tổng hợp hoặc trích dẫn. Tool so sánh URL đã chuẩn hóa, giữ nguyên dữ liệu của bản đầu tiên và trả số mục trùng. Việc tích hợp chỉ thêm một khai báo vào `tools.yaml` trên nền CP2 v3.
 
 ## 4. Kết quả — PHẦN B: Chi tiết và bằng chứng
 
@@ -109,11 +112,22 @@ Lấy từ `starter_v0/transcripts/*.transcript.json`.
 
 | Item | Evidence File | What Worked | Risk / Guardrail |
 |---|---|---|---|
-| Tool mới (`tools/<tên>/`) |  |  |  |
-| Unit test tool mới (≥ 3 test/tool) | `pytest` output (0 failed) |  |  |
+| Tool mới (`dedupe_sources`) | [Mã nguồn](../../starter_v0/tools/dedupe_sources/tool.py), [contract](../../starter_v0/tools/dedupe_sources/TOOL.md) | Giữ bản đầu tiên, metadata và thứ tự. Kiểm tra offline qua ResearchAgent giữ 2 trong 3 nguồn và đếm 1 nguồn trùng. | Không dùng mạng hoặc ghi file. URL sai trả lỗi chỉ rõ vị trí mục. Giữ query, bỏ fragment khi so sánh và không theo redirect. |
+| Unit test tool mới (≥ 3 test/tool) | [Ba test CP3](../../starter_v0/tests/test_tools_todo.py), [contract test](../../starter_v0/tests/test_tool_contract.py) | 3 test CP3 PASS, 0 FAIL, 0 SKIP. Contract 60 PASS. Toàn suite 70 PASS, 0 FAIL, 14 SKIP. | 14 skip là stub tool gốc. Test chạy offline qua registry. |
 | UI (lệnh chạy + link dùng thử) |  |  |  |
 
-Tool unit tests: số test đã viết, và một ví dụ lỗi mà unit test bắt được nhưng eval không bắt được.
+Ba test kiểm tra loại trùng và bảo toàn đầu vào, từ chối `items` sai kiểu, và trả error dict khi mục thứ hai có cổng `99999`. Eval định tuyến có thể chấm đúng tên tool dù dữ liệu đầu ra sai hoặc xử lý URL lỗi bị gián đoạn. Unit test kiểm tra cả đầu ra và nhánh lỗi.
+
+Kiểm tra trên `main` tại `740cdca` cộng với phần CP3
+
+```text
+python -m pytest tests/test_tool_contract.py -v   60 passed
+python -m pytest tests/test_tools_todo.py -v        3 passed, 14 skipped
+python -m pytest -v                              70 passed, 14 skipped
+Offline Agent dispatch                          PASS (3 input, 2 kept, 1 duplicate)
+```
+
+Kiểm tra ResearchAgent dùng provider thử offline với lời gọi dựng sẵn. Case `G01_dedupe_research_sources` đã có trong bộ nhóm và chờ CP4 chạy với model thật. Số đo CP2 v0–v3 ở B1 thuộc các run đã lưu trước khi thêm tool.
 
 ### B5. Bonus Evidence
 

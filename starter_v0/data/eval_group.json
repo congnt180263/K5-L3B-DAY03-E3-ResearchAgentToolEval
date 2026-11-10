@@ -3,5 +3,18 @@
   "dataset_role": "group",
   "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_dedupe_research_sources",
+      "phase": "B",
+      "query": "Tôi đã thu thập ba nguồn: https://example.com/report#intro, https://EXAMPLE.com:443/report#summary, https://example.org/study. Hãy loại nguồn trùng theo URL và giữ thứ tự ban đầu.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [{"name": "dedupe_sources", "args": {}}]
+      },
+      "metadata": {
+        "what_it_tests": "Agent chọn tool loại trùng cho danh sách nguồn đã có. Unit test kiểm tra nội dung đầu ra."
+      }
+    }
+  ]
 }

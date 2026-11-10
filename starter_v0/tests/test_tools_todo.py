@@ -110,13 +110,41 @@ def test_policy_instruction_like_lines_go_to_untrusted_text() -> None:
 #   2. bad / missing input from the model (empty string, wrong type, out-of-enum value)
 #   3. failure path (missing key, HTTP error, timeout) -> returns error dict, does not raise
 
-def test_my_new_tool_happy_path() -> None:
-    pytest.skip(TODO)
+def test_dedupe_sources_keeps_first_source_and_order() -> None:
+    first = {"title": "First source", "url": " https://Example.com:443/report#intro "}
+    second = {"title": "Other edition", "url": "https://example.com/report?edition=2"}
+    duplicate = {"title": "Repeated source", "url": "https://example.com/report#summary"}
+    items = [first, second, duplicate]
+    original_items = [item.copy() for item in items]
+
+    result = TOOL_FUNCTIONS["dedupe_sources"](items=items)
+
+    assert result == {
+        "tool": "dedupe_sources",
+        "items": [original_items[0], original_items[1]],
+        "duplicate_count": 1,
+    }
+    assert items == original_items
 
 
-def test_my_new_tool_bad_input_from_model() -> None:
-    pytest.skip(TODO)
+def test_dedupe_sources_rejects_non_list_input() -> None:
+    result = TOOL_FUNCTIONS["dedupe_sources"](items="https://example.com/report")
+
+    assert result == {
+        "tool": "dedupe_sources",
+        "error": "TypeError",
+        "message": "items must be a list of source objects",
+    }
 
 
-def test_my_new_tool_failure_returns_error_dict() -> None:
-    pytest.skip(TODO)
+def test_dedupe_sources_rejects_invalid_port_without_partial_results() -> None:
+    result = TOOL_FUNCTIONS["dedupe_sources"](items=[
+        {"url": "https://example.com/report"},
+        {"url": "https://example.com:99999/report"},
+    ])
+
+    assert result == {
+        "tool": "dedupe_sources",
+        "error": "ValueError",
+        "message": "items[1].url is not a valid HTTP(S) URL",
+    }
