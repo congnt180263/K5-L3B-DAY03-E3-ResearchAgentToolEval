@@ -2,18 +2,18 @@
 
 ## Thông tin nhóm
 
-- Tên nhóm:
-- Lớp: L3A / L3B
-- Repo nhóm: `K5-L3A-DAY03-TenNhom-ResearchAgentToolEval` hoặc `K5-L3B-DAY03-TenNhom-ResearchAgentToolEval` (xem [SUBMISSION.md](SUBMISSION.md))
+- Tên nhóm:E3
+- Lớp: L3B
+- Repo nhóm: `K5-L3B-DAY03-E3-ResearchAgentToolEval`
 - URL repo, nhánh nộp, commit chốt:
 
 ## Thành viên
 
 | STT | Họ tên | MSSV | Email | GitHub | Vai trò |
 | --: | ------ | ---- | ----- | ------ | ------- |
-|   1 |        |      |       |        |         |
+|   1 |Nguyễn Thành Công | 2A202603789 |      |        |         |
 |   2 |        |      |       |        |         |
-
+|   3 |        |      |       |        |         |
 ## Cá nhân
 
 Mỗi thành viên đồng thời tạo một báo cáo riêng trong `report/` theo dạng:
