@@ -64,8 +64,7 @@ Lấy từ `starter_v0/artifacts/version_log.csv` và `starter_v0/runs/*.json`. 
 |---|---|---|---:|---:|---|
 | v0 | baseline | Chạy baseline ban đầu với starter prompt và tool declarations | 0.00 | 0.65 | v0_B_base_gemini_20261110T180435443105.json |
 | v1 | artifacts/system_prompt.md | Bỏ chỉ dẫn xấu (đoán mò, ép 1 tool), bắt buộc clarify khi thiếu thông tin hoặc trước khi send | 0.65 | 0.80 | v1_B_base_gemini_20261110T185456303987.json |
-| v2 |  |  |  |  |  |
-| v2 |  |  |  |  |  |
+| v2 | artifacts/tools.yaml | Viết lại description (when/when not to use) và quy ước query/handle trong tools.yaml | 0.80 | 0.90 | v2_B_base_gemini_20261110T191935420647.json |
 | v3 |  |  |  |  |  |
 
 ### B2. Failure Analysis
