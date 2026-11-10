@@ -1,0 +1,181 @@
+tools:
+  - name: clarify
+    description: "ASK the user for missing info OR confirm before sending. USE WHEN: (1) user wants to read/summarize but gave no URL, (2) user wants tweets but named no account, (3) user wants to send/post to Telegram. Set response_type='yes_no' for send confirmation, 'text' for missing info. DO NOT answer in text when missing info — ALWAYS call this tool instead."
+    parameters:
+      type: object
+      properties:
+        question:
+          type: string
+          default: ""
+          description: "The question to ask the user"
+        response_type:
+          type: string
+          enum: [text, yes_no, choice]
+          default: "text"
+          description: "Use 'yes_no' ONLY when asking permission to send/post. Use 'text' when asking for missing URL or handle."
+        options:
+          type: array
+          default: []
+          items:
+            type: string
+      required: [question]
+
+  - name: timeline
+    description: "Get recent posts BY a specific named person or account. USE WHEN user mentions a specific person's tweets (e.g. 'tweet của Elon Musk', 'Sam Altman mới đăng gì'). Auto-map names: Elon Musk→elonmusk, Sam Altman→sama, Andrej Karpathy→karpathy. DO NOT USE for topic searches."
+    parameters:
+      type: object
+      properties:
+        screenname:
+          type: string
+          default: ""
+          description: "Twitter handle WITHOUT '@'. Examples: elonmusk, sama, karpathy"
+        limit:
+          type: integer
+          default: 5
+          description: "Number of posts as INTEGER (5 or 10, NOT '5' or '10')"
+      required: [screenname]
+
+  - name: social_search
+    description: "Search posts about a TOPIC or keyword across social media. USE WHEN searching by topic (e.g. 'tweets about GPT-5', 'mọi người nói gì về AI'). DO NOT USE for a specific person's posts."
+    parameters:
+      type: object
+      properties:
+        query:
+          type: string
+          default: ""
+          description: "Topic or keyword to search"
+        search_type:
+          type: string
+          enum: [Latest, Top]
+          default: "Latest"
+          description: "Top for most popular posts; Latest for newest posts"
+        limit:
+          type: integer
+          default: 5
+          description: "Number of results as INTEGER"
+      required: [query]
+
+  - name: lookup
+    description: "Search the web for news or information. USE WHEN user asks for news, current events, or general web search. DO NOT USE when user already provided a specific URL (use fetch instead)."
+    parameters:
+      type: object
+      properties:
+        query:
+          type: string
+          default: ""
+          description: "CORE TOPIC KEYWORD ONLY. Examples: 'AI', 'robotics', 'OpenAI'. NEVER include 'news', 'today', 'hôm nay', 'tin tức' — these go in topic/timeframe."
+        topic:
+          type: string
+          enum: [general, news]
+          default: "general"
+          description: "news for journalism/current events; general for factual lookup"
+        timeframe:
+          type: string
+          enum: [day, week, month, year]
+          default: "week"
+          description: "day=today, week=this week, month=this month"
+        max_results:
+          type: integer
+          default: 5
+      required: [query]
+
+  - name: fetch
+    description: "Read the full text content of a specific URL. USE WHEN user provides a specific http/https URL. This is different from lookup — use fetch when you have the URL, use lookup when you need to search."
+    parameters:
+      type: object
+      properties:
+        url:
+          type: string
+          default: ""
+          description: "Full URL starting with http:// or https://"
+      required: [url]
+
+  - name: format
+    description: "Format collected news items into a structured markdown digest. USE AFTER fetching data with lookup/timeline/social_search."
+    parameters:
+      type: object
+      properties:
+        items:
+          type: array
+          default: []
+          description: "List of items to format, each with title, url, source, summary"
+          items:
+            type: object
+            properties:
+              title: {type: string}
+              url: {type: string}
+              source: {type: string}
+              summary: {type: string}
+              section: {type: string}
+        template:
+          type: string
+          enum: [brief, sections, bullets, thread, daily_ai_vn]
+          default: "sections"
+        headline:
+          type: string
+          default: ""
+      required: [items, template]
+
+  - name: send
+    description: "Send text to Telegram channel. ONLY CALL when user has ALREADY confirmed in the PREVIOUS turn (confirmed=true). Never call with confirmed=false when you want to ask — use clarify(response_type='yes_no') instead."
+    parameters:
+      type: object
+      properties:
+        text:
+          type: string
+          default: ""
+        confirmed:
+          type: boolean
+          default: false
+          description: "Set true ONLY when user explicitly agreed to send in the previous turn"
+      required: [text]
+
+  - name: policy
+    description: "Look up company internal policies on AI research, data privacy, citation, or publishing."
+    parameters:
+      type: object
+      properties:
+        query: {type: string, default: ""}
+        policy_area:
+          type: string
+          enum: [all, ai_research, source_citation, data_privacy, external_publishing, tool_usage]
+          default: "all"
+        top_k: {type: integer, default: 3}
+      required: [query]
+
+  - name: papers
+    description: "Search academic research papers on arXiv by keyword."
+    parameters:
+      type: object
+      properties:
+        query: {type: string, default: ""}
+        max_results: {type: integer, default: 5}
+        sort_by:
+          type: string
+          enum: [relevance, lastUpdatedDate, submittedDate]
+          default: "relevance"
+      required: [query]
+
+  - name: paper_text
+    description: "Download and extract text from an arXiv paper by URL or ID."
+    parameters:
+      type: object
+      properties:
+        arxiv_url: {type: string, default: ""}
+        max_pages: {type: integer, default: 5}
+        max_chars: {type: integer, default: 8000}
+      required: [arxiv_url]
+
+  - name: dedupe_sources
+    description: "Remove duplicate URLs from a collected list of sources. Keep the first occurrence."
+    parameters:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              url: {type: string}
+            required: [url]
+      required: [items]

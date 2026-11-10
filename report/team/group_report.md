@@ -164,29 +164,30 @@ Test challenge: số bug tìm được trong tool có sẵn (nếu có), cách s
 
 ### B7. Small Local Model Challenge (bonus)
 
-Chỉ điền nếu nhóm làm bonus này.
-
 | Version | Model (provider) | Prompt/Tools | case_accuracy | tool_routing | argument | multiturn | Run File |
 |---|---|---|---|---|---|---|---|
-| v3 | (cloud) | v3 |  |  |  |  |  |
-| v3-<model> | (ollama) | v3 |  |  |  |  |  |
-| v3-<model> | (ollama) | v3 |  |  |  |  |  |
-| v4-local |  |  |  |  |  |  |  |
-| v5-local |  |  |  |  |  |  |  |
+| v3 | gemini-2.5-flash-lite (cloud) | v3 / v3 | 1.00 | 1.00 | 1.00 | 1.00 | v3_B_base_gemini_20261110T192653298109.json |
+| v3-qwen7b | qwen2.5:7b (ollama) | v3 / v3 | 0.85 | 0.85 | 0.85 | 1.00 | v3-qwen7b_B_base_ollama_20261111T004051198133.json |
+| v3-llama3b | llama3.2:3b (ollama) | v3 / v3 | 0.35 | 0.50 | 0.35 | 0.33 | v3-llama3b_B_base_ollama_20261111T004334504740.json |
+| v4-local | qwen2.5:7b + llama3.2:3b (ollama) | system_prompt_local.md / tools.yaml(cloud) | TBD | TBD | TBD | TBD | TBD (xem ghi chú) |
+| v5-local | qwen2.5:7b + llama3.2:3b (ollama) | system_prompt_local.md / tools_local.yaml | TBD | TBD | TBD | TBD | TBD (xem ghi chú) |
+
+> **Ghi chú v4/v5:** Các artifact tối ưu đã được tạo tại `starter_v0/artifacts/system_prompt_local.md` và `starter_v0/artifacts/tools_local.yaml`. Do hạn chế tài nguyên máy tính cục bộ (RAM/VRAM), các run v4-local và v5-local chưa hoàn thành trong thời hạn nộp bài; kết quả TBD sẽ được cập nhật sau khi chạy.
 
 Lỗi đặc thù của model nhỏ (đếm từ run JSON):
 
-| Failure Pattern | Count | Example Case | Fix Tried | Helped? |
-|---|---|---|---|---|
-| wrong / hallucinated tool |  |  |  |  |
-| invalid JSON args (`_invalid_json_arguments`) |  |  |  |  |
-| no tool call / answered directly |  |  |  |  |
-| missed `clarify` |  |  |  |  |
-| repeated / unnecessary calls |  |  |  |  |
+| Failure Pattern | Llama3b Count | Qwen7b Count | Example Case | Fix Tried (v4/v5) | Helped? |
+|---|---|---|---|---|---|
+| Missed `clarify` — trả lời text thay vì gọi tool | 4 | 2 | R10, R11, R12 | Few-shot examples + CRITICAL RULES tiếng Anh rõ | TBD |
+| Wrong tool (lookup thay vì fetch khi có URL cụ thể) | 2 | 0 | R04, M04 | Rule 4: "If user provides URL → use `fetch`" | TBD |
+| Out-of-scope gọi tool thừa (toán, code) | 2 | 0 | R08, R14 | Rule 3: OUT OF SCOPE → respond, no tool | TBD |
+| Sai kiểu dữ liệu (`limit="10"` thay vì `10`) | 1 | 0 | R05 | tools_local.yaml: ghi rõ `type: integer` | TBD |
+| Sai tool (social_search thay vì lookup carryover) | 1 | 0 | M02 | Few-shot: carryover timeframe example | TBD |
+| Multi-turn confusion (clarify thay vì timeline) | 2 | 0 | M01, M03 | Few-shot: "already gave URL/handle → use it" | TBD |
 
-- Cái gì giúp model nhỏ gọi tool đúng hơn nhất? Bằng chứng?
-- Bản prompt tối ưu cho local chạy trên model cloud thì sao?
-- Khi nào nhóm sẽ chọn model local thay vì cloud cho agent này?
+- **Cái gì giúp model nhỏ gọi tool đúng hơn nhất?** Few-shot examples bằng tiếng Anh cho từng tình huống cụ thể (đặc biệt pattern `clarify` khi thiếu info, `no-tool` khi out-of-scope). Qwen 7B đạt 0.85 với prompt cloud v3; Llama 3B cần thêm chỉ dẫn integer type và phân biệt fetch/lookup rõ ràng hơn. Bằng chứng: v3-qwen7b 17/20 PASS vs v3-llama3b chỉ 7/20 (0.35).
+- **Bản prompt tối ưu cho local chạy trên model cloud?** Cần chạy kiểm chứng v5-local trên Gemini. Dự kiến điểm Gemini giảm nhẹ do bỏ tiếng Việt và bỏ mô tả chi tiết trong tools, nhưng vẫn ≥ 0.90 do quy tắc rõ ràng hơn.
+- **Khi nào chọn model local?** Khi dữ liệu nhạy cảm không rời máy, khi không có quota API, hoặc khi task đơn giản (single-turn routing) trên Qwen 7B là đủ. Với multi-turn phức tạp hoặc boundary an toàn nghiêm ngặt, model cloud vẫn vượt trội rõ rệt.
 
 ## 5. Khó khăn và cách xử lý
 
