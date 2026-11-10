@@ -4,7 +4,7 @@
 
 - Họ tên: Mai Xuân Khang
 - MSSV: 2A202603722
-- Email: Chờ Khang xác nhận thông tin dùng trong báo cáo nộp.
+- Email: maixkhang2004@gmail.com
 - GitHub: KhangMai123
 - Nhóm và lớp: E3 — L3B, VinUni AI20K K5
 
