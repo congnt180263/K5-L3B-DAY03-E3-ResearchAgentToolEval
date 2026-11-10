@@ -37,6 +37,7 @@ Ví dụ: "Research agent: tìm tin theo từ khóa / theo tài khoản, đọc 
 | Tên tool | Làm được gì | Tool mới nhóm thêm? |
 |---|---|---|
 | clarify | hỏi lại người dùng khi thiếu thông tin | không |
+| dedupe_sources | Loại nguồn có URL trùng trong danh sách kết quả đã thu thập, giữ bản đầu tiên và thứ tự gốc | có, CP3 |
 |  |  |  |
 |  |  |  |
 
@@ -52,7 +53,7 @@ Ví dụ: "Research agent: tìm tin theo từ khóa / theo tài khoản, đọc 
 
 > Tóm tắt các thay đổi chính trong `starter_v0/artifacts/system_prompt.md` và `starter_v0/artifacts/tools.yaml`, và tool mới nhóm viết (tên, làm gì, khi nào agent nên gọi).
 
--
+- CP3 bổ sung `dedupe_sources`. Agent gọi tool khi đã có một danh sách nguồn và cần loại URL trùng trước khi trích dẫn hoặc làm digest. Tool chuẩn hóa URL để so sánh, giữ nguyên URL và metadata của mục xuất hiện đầu tiên, rồi trả danh sách đã lọc và số mục trùng.
 
 ## 4. Kết quả — PHẦN B: Chi tiết và bằng chứng
 
@@ -102,11 +103,19 @@ Lấy từ `starter_v0/transcripts/*.transcript.json`.
 
 | Item | Evidence File | What Worked | Risk / Guardrail |
 |---|---|---|---|
-| Tool mới (`tools/<tên>/`) |  |  |  |
-| Unit test tool mới (≥ 3 test/tool) | `pytest` output (0 failed) |  |  |
+| Tool mới (`dedupe_sources`) | [Code](../../starter_v0/tools/dedupe_sources/tool.py), [contract](../../starter_v0/tools/dedupe_sources/TOOL.md) | Giữ bản đầu tiên và thứ tự khi loại nguồn trùng theo URL. | Offline, không ghi file. Đầu vào sai trả lỗi có chỉ số mục, không trả kết quả dở dang. Giữ query và không theo redirect. |
+| Unit test tool mới (≥ 3 test/tool) | [Ba test CP3](../../starter_v0/tests/test_tools_todo.py) | Tool mới 3 passed, 0 failed, 0 skipped. Contract 60 passed. Toàn suite 70 passed, 0 failed, 14 skipped. | 14 skip là stub tool gốc thuộc phần thử thách. Ba test mới chạy trực tiếp qua registry. |
 | UI (lệnh chạy + link dùng thử) |  |  |  |
 
-Tool unit tests: số test đã viết, và một ví dụ lỗi mà unit test bắt được nhưng eval không bắt được.
+Ba unit test kiểm tra loại trùng và giữ nguyên dữ liệu, từ chối sai kiểu `items`, và xử lý URL có cổng ngoài phạm vi. Eval có thể chấm đúng tên tool dù cổng `99999` làm code ném ngoại lệ. Unit test kiểm tra trường hợp đó trả error dict, kể cả khi các mục trước nó hợp lệ.
+
+Kết quả pytest từ `starter_v0`
+
+```text
+python -m pytest tests/test_tool_contract.py -v   60 passed
+python -m pytest tests/test_tools_todo.py -v        3 passed, 14 skipped
+python -m pytest -v                              70 passed, 14 skipped
+```
 
 ### B5. Bonus Evidence
 

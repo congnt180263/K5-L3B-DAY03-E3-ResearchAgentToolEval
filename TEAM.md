@@ -12,7 +12,7 @@
 | STT | Họ tên | MSSV | Email | GitHub | Vai trò |
 | --: | ------ | ---- | ----- | ------ | ------- |
 |   1 |Nguyễn Thành Công | 2A202603789 |      |        |         |
-|   2 |        |      |       |        |         |
+|   2 | Mai Xuân Khang | 2A202603722 |       | KhangMai123 | CP3 — New Tool & Unit Tests |
 |   3 |        |      |       |        |         |
 ## Cá nhân
 

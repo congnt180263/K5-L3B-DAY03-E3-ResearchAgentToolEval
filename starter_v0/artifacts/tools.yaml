@@ -123,3 +123,18 @@ tools:
         max_pages: {type: integer, default: 5, description: "Số trang"}
         max_chars: {type: integer, default: 8000, description: "Số ký tự"}
       required: [arxiv_url]
+
+  - name: dedupe_sources
+    description: "Loại nguồn có URL trùng trong danh sách kết quả đã thu thập trước khi tổng hợp hoặc trích dẫn. Giữ mục xuất hiện đầu tiên và dữ liệu gốc. Không dùng để tìm nguồn mới, đọc URL hoặc so sánh nội dung bài."
+    parameters:
+      type: object
+      properties:
+        items:
+          type: array
+          description: "Các mục nguồn đã có, mỗi mục chứa một URL HTTP(S) tuyệt đối."
+          items:
+            type: object
+            properties:
+              url: {type: string}
+            required: [url]
+      required: [items]
