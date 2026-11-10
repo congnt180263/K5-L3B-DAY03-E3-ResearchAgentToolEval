@@ -11,7 +11,7 @@
 
 | STT | Họ tên | MSSV | Email | GitHub | Vai trò |
 | --: | ------ | ---- | ----- | ------ | ------- |
-|   1 |Nguyễn Thành Công | 2A202603789 |congc3c1@gmail.com|congnt180263 | Quản lý System Prompt, Tool Declaration & Vòng lặp tối ưu v0 -> v3        |
+|   1 |Nguyễn Thành Công | 2A202603789 |congc3c1@gmail.com|congnt180263 | Quản lý System Prompt, Tool Declaration & Vòng lặp tối ưu v0 -> v3. Xây dựng UI cho Agent     |
 |   2 |        |      |       |        |         |
 |   3 |        |      |       |        |         |
 ## Cá nhân

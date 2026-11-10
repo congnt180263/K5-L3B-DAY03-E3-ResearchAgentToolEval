@@ -49,7 +49,7 @@ init_session_state()
 st.sidebar.title("⚙️ Cấu hình Agent")
 provider_name = st.sidebar.selectbox(
     "Provider",
-    ["openrouter", "openai", "anthropic", "gemini", "ollama"],
+    ["gemini", "openrouter", "openai", "anthropic", "ollama"],
     index=0,
     help="Provider LLM được chọn để hoàn thành task.",
 )
