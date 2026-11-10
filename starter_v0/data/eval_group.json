@@ -2,6 +2,280 @@
   "dataset_id": "day03_v2_research_group",
   "dataset_role": "group",
   "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
-  "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "allowed_failure_types": [
+    "wrong_tool",
+    "wrong_arg_value",
+    "wrong_boundary",
+    "unnecessary_tool",
+    "out_of_scope",
+    "missing_info"
+  ],
+  "cases": [
+    {
+      "id": "G01_dedupe_research_sources",
+      "phase": "B",
+      "query": "Tôi đã thu thập ba nguồn: https://example.com/report#intro, https://EXAMPLE.com:443/report#summary, https://example.org/study. Hãy loại nguồn trùng theo URL và giữ thứ tự ban đầu.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "dedupe_sources",
+            "args": {}
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "routing_new_tool_dedupe",
+        "difficulty": "medium",
+        "what_it_tests": "Route tới TOOL MỚI: đã có sẵn danh sách nguồn và yêu cầu loại trùng → dedupe_sources, không dùng lookup/fetch. Không kiểm tra args items vì eval không so sánh được list object; nội dung đầu ra do unit test kiểm."
+      }
+    },
+    {
+      "id": "G02_handle_with_at_sign",
+      "phase": "B",
+      "query": "Lấy 4 tweet mới nhất của @karpathy",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 4
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "arg_handle_strip_at",
+        "difficulty": "easy",
+        "what_it_tests": "User gõ handle có '@' → screenname phải bỏ '@' (karpathy) và trích đúng limit=4. Base chỉ có case map tên thường sang handle."
+      }
+    },
+    {
+      "id": "G03_timeframe_month",
+      "phase": "B",
+      "query": "Tin tức về Nvidia trong tháng này",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Nvidia",
+              "topic": "news",
+              "timeframe": "month"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "arg_timeframe_month",
+        "difficulty": "medium",
+        "what_it_tests": "'tháng này' → timeframe=month (base chỉ phủ day/week), query chỉ giữ keyword Nvidia, topic=news."
+      }
+    },
+    {
+      "id": "G04_general_knowledge_topic",
+      "phase": "B",
+      "query": "Retrieval-Augmented Generation (RAG) là gì và hoạt động như thế nào?",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "general"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "arg_topic_general",
+        "difficulty": "medium",
+        "what_it_tests": "Câu hỏi kiến thức tổng quát (không phải tin thời sự) → lookup với topic=general, không gán nhầm topic=news. Base chỉ phủ topic=news."
+      }
+    },
+    {
+      "id": "G05_smalltalk_no_tool",
+      "phase": "B",
+      "query": "Cảm ơn bạn nhé, vậy là đủ thông tin cho mình rồi.",
+      "failure_type": "unnecessary_tool",
+      "expect": {
+        "no_tool": true,
+        "behavior": "answer_without_tool"
+      },
+      "metadata": {
+        "skill": "no_tool_smalltalk",
+        "difficulty": "easy",
+        "what_it_tests": "Câu xã giao/kết thúc hội thoại → trả lời thẳng, KHÔNG gọi tool (kể cả clarify)."
+      }
+    },
+    {
+      "id": "G06_send_after_confirmation",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Đăng bản tin này lên Telegram giúp mình: 'Bản tin AI: OpenAI công bố mô hình mới.'"
+        },
+        {
+          "role": "assistant",
+          "content": "Bạn có chắc chắn muốn đăng bản tin này lên Telegram không?"
+        },
+        {
+          "role": "user",
+          "content": "Có, mình xác nhận, gửi đi."
+        }
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "confirmed": true
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_send_after_yes",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: đã hỏi xác nhận và user đồng ý → phải gọi send(confirmed=true), không hỏi lại lần nữa. Base chỉ kiểm tra bước hỏi xác nhận."
+      }
+    },
+    {
+      "id": "G07_user_declines_send",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Đăng bản tin AI hôm nay lên Telegram giúp mình"
+        },
+        {
+          "role": "assistant",
+          "content": "Bạn có chắc chắn muốn đăng bản tin này lên Telegram không?"
+        },
+        {
+          "role": "user",
+          "content": "Không, thôi đừng gửi nữa, hủy nhé."
+        }
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "no_tool": true,
+        "behavior": "acknowledge_cancel"
+      },
+      "metadata": {
+        "skill": "multiturn_send_declined",
+        "difficulty": "medium",
+        "what_it_tests": "3 turns: user từ chối xác nhận → KHÔNG gọi send và không gọi tool nào khác, chỉ xác nhận đã hủy."
+      }
+    },
+    {
+      "id": "G08_social_search_carry_args",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm tweet mọi người bàn về GPT-5"
+        },
+        {
+          "role": "user",
+          "content": "Chỉ lấy 8 bài thôi"
+        },
+        {
+          "role": "user",
+          "content": "Ưu tiên bài mới nhất nhé"
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "GPT-5",
+              "limit": 8,
+              "search_type": "Latest"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_social_search_args",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: carry query GPT-5, limit=8 từ lượt 2, 'mới nhất' → search_type=Latest. Base chưa kiểm limit và Latest của social_search."
+      }
+    },
+    {
+      "id": "G09_dedupe_accumulated_sources",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Mình có hai nguồn: https://arxiv.org/abs/2305.18290 và https://news.ycombinator.com/item?id=1"
+        },
+        {
+          "role": "user",
+          "content": "Thêm nguồn https://arxiv.org/abs/2305.18290#abstract và https://openai.com/research"
+        },
+        {
+          "role": "user",
+          "content": "Giờ loại các nguồn trùng URL trong toàn bộ danh sách trên giúp mình."
+        }
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "dedupe_sources",
+            "args": {}
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_route_new_tool",
+        "difficulty": "hard",
+        "what_it_tests": "Route tới TOOL MỚI qua nhiều lượt: gom nguồn từ lượt 1 và 2 rồi gọi dedupe_sources một lần; không gọi fetch/paper_text để đọc từng link."
+      }
+    },
+    {
+      "id": "G10_correct_timeframe_year",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tin AI tuần này có gì?"
+        },
+        {
+          "role": "user",
+          "content": "À không, mình muốn xem tổng hợp trong cả năm nay"
+        },
+        {
+          "role": "user",
+          "content": "Vẫn chủ đề AI nhé"
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "year"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_timeframe_correction",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: user sửa timeframe week→year, giữ query AI và topic=news. Base chỉ có carryover day, chưa có sửa sang year."
+      }
+    }
+  ]
 }

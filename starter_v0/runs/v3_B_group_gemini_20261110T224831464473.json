@@ -1,0 +1,933 @@
+{
+  "run_id": "v3_B_group_gemini_20261110T224831464473",
+  "version": "v3",
+  "artifact_version": "v3+p92f5173e942e+t3eba49829063",
+  "prompt_hash": "92f5173e942ea4c7d8d26a8edf92c84ffb5d66194c1a79a4486477003a7a3e52",
+  "tools_hash": "3eba498290631a1a79c46826dd64e8316a8742dfbad192937093342b4d491fe4",
+  "phase": "B",
+  "suite": "group",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "system_prompt": "C:\\Users\\admin\\Desktop\\lab\\lab3\\K5-L3B-DAY03-E3-ResearchAgentToolEval\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\admin\\Desktop\\lab\\lab3\\K5-L3B-DAY03-E3-ResearchAgentToolEval\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day03_v2_research_group",
+  "dataset_role": "group",
+  "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
+  "generated_at": "2026-11-10T22:48:31",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 10,
+    "case_accuracy": 1.0,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 1.0,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
+  },
+  "results": [
+    {
+      "id": "G01_dedupe_research_sources",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_new_tool_dedupe",
+        "difficulty": "medium",
+        "what_it_tests": "Route tới TOOL MỚI: đã có sẵn danh sách nguồn và yêu cầu loại trùng → dedupe_sources, không dùng lookup/fetch. Không kiểm tra args items vì eval không so sánh được list object; nội dung đầu ra do unit test kiểm."
+      },
+      "input": "Tôi đã thu thập ba nguồn: https://example.com/report#intro, https://EXAMPLE.com:443/report#summary, https://example.org/study. Hãy loại nguồn trùng theo URL và giữ thứ tự ban đầu.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "dedupe_sources",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "dedupe_sources",
+            "args": {
+              "items": [
+                {
+                  "url": "https://example.com/report#intro"
+                },
+                {
+                  "url": "https://EXAMPLE.com:443/report#summary"
+                },
+                {
+                  "url": "https://example.org/study"
+                }
+              ]
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "dedupe_sources",
+          "args": {
+            "items": [
+              {
+                "url": "https://example.com/report#intro"
+              },
+              {
+                "url": "https://EXAMPLE.com:443/report#summary"
+              },
+              {
+                "url": "https://example.org/study"
+              }
+            ]
+          },
+          "result": {
+            "tool": "dedupe_sources",
+            "items": [
+              {
+                "url": "https://example.com/report#intro"
+              },
+              {
+                "url": "https://example.org/study"
+              }
+            ],
+            "duplicate_count": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_handle_with_at_sign",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_handle_strip_at",
+        "difficulty": "easy",
+        "what_it_tests": "User gõ handle có '@' → screenname phải bỏ '@' (karpathy) và trích đúng limit=4. Base chỉ có case map tên thường sang handle."
+      },
+      "input": "Lấy 4 tweet mới nhất của @karpathy",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 4
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "limit": 4,
+              "screenname": "karpathy"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "limit": 4,
+            "screenname": "karpathy"
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "screenname": "karpathy",
+            "items": [
+              {
+                "title": "Earlier this week Tristan published his top YouTube channels:",
+                "summary": "Earlier this week Tristan published his top YouTube channels:\nhttps://t.co/NZ3UCNo6cT\nWhich looked excellent so clearly I had to turn it into TristanTube:\nhttps://t.co/l0KyW1WdNH\n47K super nerdy videos +TV mode for laid back watching. (One-shotted with Claude Code in 3 minutes)",
+                "url": "https://x.com/karpathy/status/2119114537442189652",
+                "source": "@karpathy",
+                "date": "Sat Nov 07 17:07:31 +0000 2026",
+                "metrics": {
+                  "favorites": 9189,
+                  "retweets": 773,
+                  "views": "948947"
+                }
+              },
+              {
+                "title": "Weekend hack: HackerTube. I was annoyed with YouTube's recommendations so I had Claude filter down 43M comments over 20 ",
+                "summary": "Weekend hack: HackerTube. I was annoyed with YouTube's recommendations so I had Claude filter down 43M comments over 20 years of HN to 6,454 videos that keep being recommended. *Significantly* better viewing experience, ~2 hours with Opus 5.5:\nhttps://t.co/JIhXN7OSh1\n\n- Excellent recs without any logins (state is kept in local browser session)\n- Thumbnail is a representative frame from middle of the video instead of the super duper A/B test hyper-optimized user uploads\n- Underlying data from the comment analysis as one zip file, point your Claude at it and ask for your own version\n- HackerTube Longs ✊\n\nA bit more on the process:\nI use Claude Code (desktop app for Mac), Opus 5.5 on Medium effort as my default. I only talk to Claude and have it do everything, the only \"manual work\" I helped with in tandem was in the browser (reminiscent of MenuGen): 1) I had to create some kind of API key from Google Cloud UI to query YouTube for video metadata, 2) I booted up a VPS box for serving and 3) I bought the domain name. Once the box was up I gave Claude the IP and told it update, secure, harden, deploy and optimize the code, and it did the whole thing.\n\nMany awesome projects that would have normally taken weeks/months even can now be few-shotted for breakfast. What else are we not thinking of.",
+                "url": "https://x.com/karpathy/status/2116957135661945283",
+                "source": "@karpathy",
+                "date": "Sun Nov 01 18:14:46 +0000 2026",
+                "metrics": {
+                  "favorites": 52361,
+                  "retweets": 4838,
+                  "views": "5731285"
+                }
+              },
+              {
+                "title": "RT @Tristan0x: If you've ever wondered why smart TVs are so cheap, this is why.",
+                "summary": "RT @Tristan0x: If you've ever wondered why smart TVs are so cheap, this is why.\n\n@log4j rooted his Samsung and found an always-on hot mic,…",
+                "url": "https://x.com/karpathy/status/2114384346815820050",
+                "source": "@karpathy",
+                "date": "Sun Oct 25 15:51:26 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 3287,
+                  "views": "40227"
+                }
+              },
+              {
+                "title": "Dusting off this tweet from April because this gap in shared understanding of LLM capability is *widening*. It's now les",
+                "summary": "Dusting off this tweet from April because this gap in shared understanding of LLM capability is *widening*. It's now less \"two groups of people speaking past each other\" and more a sharp funnel.\n\n- Napkin math somewhere around 6B people (~75% of the population) have barely come in contact with LLMs at all.\n- Around 1-2B (~20%) are casual and infrequent users of free-tier ChatGPT-like products. This group sees derpy chatbots and treats them a bit like a better Google search, a writing aid, or etc. Maybe an agent tries to book you a flight. I have non-tech friends who (reasonably, imo) say they have not much use for it at all. Even many professionals outside of math&code are in this tier. For example, execs and many other functions spend a lot of their time talking to other people, so while they understand what is happening intellectually, it is still second-hand and a bit abstract.\n- Now we get to professional use of frontier-grade LLMs in math&code. Somewhere around 20M people (0.2%) see first-hand that large, complex projects that used to take them weeks/months can now be completed by agents with a prompt. Building apps, copying apps, translating apps, decompiling apps from binaries... This has all happened very quickly and recently - less than 1 year ago, I was writing code manually by hand, typing memorized computer code commands into a code editor character by character, occasionally pressing Tab to autocomplete a little chunk of code.\n- And finally we get to the ~5,000 people (~0.00006%) with access to frontier-grade systems internally. The external world has seen the preview. It looks like swarms of thousands of agents collaborating over weeks on software mega projects: minting zero days, running cyber attacks and defenses at machine speeds, discovering new science, advancing the frontier of mathematics. Things that would have taken top professionals in the industry years of work. Meanwhile, human review and comprehension are starting to fall behind. For example, people are still involved in the \"archeology\" of the OpenAI-HF incident from many months ago. Mathematicians may be poring over the 722 manuscripts on frontier mathematics for a while.\n\nThe funnel is driven by a combination of factors:\n1. The impact scales with ambition, problem size, and horizon. A question with a paragraph answer barely stresses the system. You need a reservoir of big, difficult problems that you really care about. This aspect drives the consumer / professional dimension of the funnel.\n2. The jaggedness of the system (which I have written about a lot separately). Capability peaks in domains that are digital, verifiable and economically valuable. This is because LLM capability emerges from reinforcement learning on verifiable rewards on a curated environment mixture driven by revenue potential. This aspect primarily drives the area (e.g. math&code) dimension of the funnel.\n3. Access. Free-tier, paid-tier, internal.\n\nSo this is the weirdness of the moment. The general public has mostly not interacted with these systems. When they have, it looks like a derpy chatbot. The majority of professionals still see only a modest uplift. And a small sliver of professionals are experiencing the vertigo of the curve going vertical. And it is all happening at the same time.",
+                "url": "https://x.com/karpathy/status/2109361546505966046",
+                "source": "@karpathy",
+                "date": "Sun Oct 11 19:12:37 +0000 2026",
+                "metrics": {
+                  "favorites": 44262,
+                  "retweets": 5926,
+                  "views": "6981549"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_timeframe_month",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_timeframe_month",
+        "difficulty": "medium",
+        "what_it_tests": "'tháng này' → timeframe=month (base chỉ phủ day/week), query chỉ giữ keyword Nvidia, topic=news."
+      },
+      "input": "Tin tức về Nvidia trong tháng này",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Nvidia",
+              "topic": "news",
+              "timeframe": "month"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "timeframe": "month",
+              "query": "Nvidia"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "topic": "news",
+            "timeframe": "month",
+            "query": "Nvidia"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "Nvidia",
+            "topic": "news",
+            "timeframe": "month",
+            "items": [
+              {
+                "title": "Nvidia",
+                "url": "https://tavily.com/knowledge/company/TXRhn2TKUD7t",
+                "source": "tavily.com",
+                "summary": "# NVIDIA\nID: TXRhn2TKUD7t\nWebsite: www.nvidia.com\nHeadquarters: Santa Clara, CA, United States\nLinkedIn: www.linkedin.com/company/nvidia · 6,301,389 followers\nIndustry: Computer Hardware Manufacturing\nIndustry codes: SIC 73, 737, NAICS 33, 334\nCompany type: Public Company\nFounded: 1993 [...] Description: NVIDIA is a world leader in the field of artificial intelligence, specifically in the field of GPU. They focus on AI, HPC, gaming, creative design, autonomy vehicles, and robotics. [...] ## Financials\n- Stock: NVDA\n- Stock: NASDAQ:NVDA\n- Annual revenue: 215.94B USD\n- Quarterly revenue: 57.01B USD\n- Market cap: 3.46T USD as of 2024-10-29\n- Q1, 2027: revenue 81.62B gross profit 61.16B EBIT 53.54B net income 58.32B EPS 2.390000104904175 USD\n- Q1, 2027: revenue 81.62B gross profit 61.16B EBIT 53.54B net income 58.32B EPS 2.390000104904175 USD\n- FY, 2026: revenue 215.94B gross profit 153.46B EBIT 130.39B net income 120.07B EPS 4.900000095367432 USD",
+                "score": 0.7821637
+              },
+              {
+                "title": "Nvidia launches investigation into CEO’s alleged relationship with Chinese spy : NPR",
+                "url": "https://www.npr.org/2026/11/08/nx-s1-6034036/nvidia-launches-investigation-into-ceos-alleged-relationship-with-chinese-spy",
+                "source": "npr.org",
+                "summary": "Nvidia dominates the global market for AI chips, and has seen explosive growth in recent years, as NPR has reported. The company started as a manufacturer of chips for computer graphics, which later turned out to be crucial for training artificial intelligence.\n\nNvidia's CEO and President Trump have repeatedly appeared in public together in recent years. According to Huang, Nvidia is helping to fund the construction of a new ballroom at the White House. [...] Rebecca Hersher\n\nNvidia CEO Jensen Huang delivers his keynote on the company's GTC event in Berlin, Germany, Wednesday, Oct. 21, 2026.\n\nNvidia CEO Jensen Huang delivers his keynote on the company's GTC event in Berlin, Germany, Wednesday, Oct. 21, 2026.  Markus Schreiber/AP  hide caption\n\n Markus Schreiber/AP\n\nThe massive artificial intelligence chip maker Nvidia says it is launching an internal investigation, after reports that the company's CEO was in a close relationship with a Chinese spy. [...] In the statement announcing the investigation, Nvidia cited recent reporting by The New York Times, which alleges Nvidia CEO Jensen Huang was the target of a Chinese intelligence operation that sought to send advanced Nvidia AI chips to China.\n\n\"While the Board has no reason to believe that either national security or NVIDIA secrets were compromised, the Board's inquiry will examine all available information,\" the statement from the company's board of directors reads in part.",
+                "score": 0.67661995
+              },
+              {
+                "title": "Nvidia stock falls amid probe into CEO’s relationship with Chinese spy",
+                "url": "https://www.nbcnews.com/business/markets/nvidia-stock-falls-probe-ceos-relationship-chinese-spy-rcna608290",
+                "source": "nbcnews.com",
+                "summary": "By Steve Kopack and Rob Wile\n\nNvidia’s stock slid about 4% on Monday after the company announced that it had opened an investigation into CEO Jensen Huang’s relationship with a woman that U.S. intelligence agencies say is a Chinese spy.\n\nThe probe has the potential to unsettle the entire AI boom, fueled by trillions of dollars of spending and investments, in part to purchase Nvidia’s cutting-edge AI chips. Nvidia’s drop wiped out more than $200 billion in value. [...] Jensen Huang has become one of the main forces driving the global AI push while steering Nvidia to a market value of more than $4 trillion. Huang has led Nvidia since he founded it in 1993, so it would be a seismic change if he were to leave the role. [...] Nvidia’s peers, such as AMD, Qualcomm, Taiwan Semi and Intel, all rose along with the broader market. Nvidia was the biggest loser on the Dow, the Nasdaq 100 and S&P 500.\n\nWith so many outstanding questions about the Huang scandal, few major analysts that cover Nvidia had weighed in on Monday morning about what it could mean for the company’s future.\n\nBut those who did said it was a blemish on an otherwise sterling track record, which could spark even more investigations.",
+                "score": 0.6415346
+              },
+              {
+                "title": "Nvidia's shares slide as chip giant probes CEO over spy claims | Reuters",
+                "url": "https://www.reuters.com/world/asia-pacific/south-korea-says-nvidia-issues-wont-affect-contracted-gpu-supplies-2026-11-09",
+                "source": "reuters.com",
+                "summary": "Nvidia's shares tumbled around 8% in early trading, extending last week's selloff and pushing the stock to fresh multi-month lows. At the current levels, the chipmaker would lose around $350 billion in value from its last ​closing price.\n\n\"The market's probably telling you now this does no favors to the stock whatsoever in a time when there's a lot of conjecture as to the build-out of data centers,\" said Chris Weston, head of research at brokerage Pepperstone in ​Melbourne. [...] The investigation, announced on Sunday, has put a spotlight on Huang's future given Nvidia's status as the world's most valuable chipmaker and the CEO's role as the most prolific salesman of the AI boom.\n\nThe leather-jacketed Huang enjoys rock-star status worldwide, particularly in Asia, where he often mingles freely with fans, taking selfies and signing autographs for his devoted followers. [...] SEOUL/SYDNEY, Nov 9 (Reuters) - Nvidia (NVDA.O) shares tumbled on Monday after an internal investigation into whether CEO Jensen Huang had been targeted by a foreign intelligence effort ​put his future at the AI chipmaker under scrutiny.",
+                "score": 0.6131208
+              },
+              {
+                "title": "Jensen Huang's affair highlights Nvidia's key man risk with no heir",
+                "url": "https://www.cnbc.com/2026/11/09/jensen-huang-affair-nvidia-succession.html",
+                "source": "cnbc.com",
+                "summary": "Nvidia has long maintained a flat, non-hierarchical organizational structure. Huang has deep involvement in the company's day-to-day operations and frequently serves as its spokesperson in front of world leaders and at industry conferences. In addition to being co-founder and CEO, Huang is also Nvidia's president. [...] While Nvidia says Huang will continue to lead the company during the probe, pressure is rapidly mounting on the chipmaker, whose technology has powered the first four years of the generative artificial intelligence boom. Leaders from both parties are calling for briefings, and Democrats poised to take control of both houses of Congress are calling for investigations and new legislation \"to stop advanced AI chips from fueling China's military,\" Sen. Elizabeth Warren of Massachusetts wrote in a [...] The Melius analysts wrote that Nvidia has a \"strong bench\" of executive talent across its networking, hyperscale and high-performance computing businesses, along with \"technical expertise\" stemming from Chief Technology Officer Michael Kagan as well as Dally, the chief scientist.\n\n\"While these folks can keep the engine running, Jensen is one of a kind, and his energy will be needed to maintain confidence in the AI trade,\" the analysts wrote.",
+                "score": 0.6130049
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G04_general_knowledge_topic",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_topic_general",
+        "difficulty": "medium",
+        "what_it_tests": "Câu hỏi kiến thức tổng quát (không phải tin thời sự) → lookup với topic=general, không gán nhầm topic=news. Base chỉ phủ topic=news."
+      },
+      "input": "Retrieval-Augmented Generation (RAG) là gì và hoạt động như thế nào?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "general"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Retrieval-Augmented Generation RAG",
+              "timeframe": "month",
+              "topic": "general"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "Retrieval-Augmented Generation RAG",
+            "timeframe": "month",
+            "topic": "general"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "Retrieval-Augmented Generation RAG",
+            "topic": "general",
+            "timeframe": "month",
+            "items": [
+              {
+                "title": "What is Retrieval-Augmented Generation (RAG)? | H2O.ai",
+                "url": "https://h2o.ai/wiki/retrieval-augmented-generation",
+                "source": "h2o.ai",
+                "summary": "Key takeaways\n\n RAG combines a retriever (usually a vector database or knowledge graph) with a generator (an LLM).\n It reduces hallucinations, enables source citation, and lets you use current data without retraining.\n A RAG pipeline runs in three phases: indexing, retrieval, and generation.\n Common variants: standard RAG, hybrid RAG, Graph RAG, and Agentic RAG.\n Enterprise h2oGPTe includes an end-to-end RAG pipeline, and H2O Eval Studio scores its retrieval, accuracy, and groundedness. [...] RAG is closely tied to embeddings (the technique that turns text into vectors for similarity search), tokenization (how the model reads text), the context window (how much retrieved text you can pass in), and prompt engineering (how retrieved context is presented to the model).\n\n## How does RAG work?\n\nA production RAG pipeline runs in three phases: indexing, retrieval, and generation. [...] ### RAG variants\n\nVariant\n\nWhat it does\n\nWhen to use\n\nStandard RAG\n\nOne retrieval, one generation\n\nQ&A, document search\n\nHybrid RAG\n\nCombines keyword and vector search, plus reranking\n\nProduction systems needing high recall\n\nGraph RAG\n\nRetrieves from a knowledge graph, not just documents\n\nEntity-rich data, complex relationships\n\nAgentic RAG\n\nAn agent decides when, what, and how many times to retrieve\n\nMulti-hop reasoning, dynamic workflows\n\n## Benefits of RAG",
+                "score": 0.85034436
+              },
+              {
+                "title": "What Is RAG? Retrieval-Augmented Generation Explained",
+                "url": "https://valorc3.com/blog/artificial-intelligence/what-is-rag-how-retrieval-augmented-generation-works",
+                "source": "valorc3.com",
+                "summary": "The plumbing underneath is worth two minutes of your time because it explains the rest. Your documents get split into chunks and converted into embeddings, numerical representations of meaning that live in a vector database, and when someone asks a question, that question gets converted the same way so the system can hunt down the chunks closest in meaning, pull them, and stuff them into the prompt right next to the question. The model reads what it retrieved. Then it writes, usually with [...] Retrieval-augmented generation (RAG) is an AI architecture that retrieves relevant documents from a company’s own data before the model answers, so responses come from real source material instead of the model’s memory. That one change is why enterprise AI finally works, and why it turned into an infrastructure conversation. [...] No. The math doesn’t work. Enterprise knowledge bases run to billions of tokens, and even if a context window somehow held everything you’ve got, you’d pay to process all of it on every single query, latency would crater, and you’d have no permission control over what the model sees. Retrieval exists to pick the right hundred pages out of ten million, filtered by what this particular user is cleared to read. Bigger windows make retrieval more useful, not less. You can feed the model richer",
+                "score": 0.83004373
+              },
+              {
+                "title": "What is retrieval augmented generation?| Glossary | Cohesity",
+                "url": "https://www.cohesity.com/glossary/retrieval-augmented-generation-rag",
+                "source": "cohesity.com",
+                "summary": "Retrieval-augmented generation (RAG) is an NLP technique that combines retrieval-based AI, which finds relevant information from existing sources, with generative AI, which synthesizes that information into a coherent, contextually appropriate response. RAG was developed specifically to overcome the weaknesses of each approach alone: pure generative models can produce low-quality or inaccurate output on complex topics, while pure retrieval models are limited by the data they can access, and [...] Retrieval augmented generation (RAG) is a natural language processing (NLP) technique that combines the strengths of both retrieval- and generative-based artificial intelligence (AI) models. RAG AI can deliver accurate results that make the most of pre-existing knowledge but can also process and consolidate that knowledge to create unique, context-aware answers, instructions, or explanations in human-like language rather than just summarizing the retrieved data. [...] RAG was developed to overcome these relative weaknesses in existing models to combine their strengths and minimize drawbacks.\n\nA retrieval model is used to find relevant information from existing sources in a RAG-based AI system. In contrast, the generative model takes the retrieved information, synthesizes all the data, and shapes it into a coherent and contextually appropriate response.\n\n## What are the benefits of retrieval augmented generation?",
+                "score": 0.8234704
+              },
+              {
+                "title": "What Is RAG? Retrieval-Augmented Generation Explained",
+                "url": "https://www.youtube.com/watch?v=Upoj9pg3L4Q",
+                "source": "youtube.com",
+                "summary": "[4:07] extracting text from source files, cleaning it, splitting it into manageable chunks, and storing it in a searchable index. Second is question\n[4:15] answering time. This happens live in real time. When a user types a prompt, your system filters the index, retrieves the best chunks, augments the user's\n[4:23] prompt with that data, and generates the final answer. Okay, let's drill down into that second part. Section four, [...] [2:37] bridge. Retrieval augmented generation is a system design pattern. It isn't a brand new model itself. Rather, it's a\n[2:44] way of wiring systems together. It retrieves relevant information from an external collection like your private company database and supplies it to a\n[2:51] generative model as context to answer the user's question. The original research beautifully described this as combining a model's learned [...] Why a standalone LLM may not have the information needed to answer a question.\nWhat Retrieval-Augmented Generation (RAG) means.\nThe difference between indexing documents and answering a user's question.\nRetrieval: How relevant information is found.\nAugmentation: How retrieved information is added to the model's context.\nGeneration: How the LLM uses the question and supplied context to produce an answer.\nHow the complete RAG pipeline works through a practical company leave-policy example.",
+                "score": 0.82032555
+              },
+              {
+                "title": "Retrieval Augmented Generation - Amazon SageMaker AI",
+                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/jumpstart-foundation-models-customize-rag.html",
+                "source": "docs.aws.amazon.com",
+                "summary": "which text is given numerical representation in a vector space. RAG model architectures compare the embeddings of user queries within the vector of the knowledge library. The original user prompt is then appended with relevant context from similar documents within the knowledge library. This augmented prompt is then sent to the foundation model. You can update knowledge libraries and their relevant embeddings asynchronously. [...] With RAG, the external data used to augment your prompts can come from multiple data sources, such as a document repositories, databases, or APIs. The first step is to convert your documents and any user queries into a compatible format to perform relevancy search. To make the formats compatible, a document collection, or knowledge library, and user-submitted queries are converted to numerical representations using embedding language models. Embedding is the process by which text is given [...] Foundation models are usually trained offline, making the model agnostic to any data that is created after the model was trained. Additionally, foundation models are trained on very general domain corpora, making them less effective for domain-specific tasks. You can use Retrieval Augmented Generation (RAG) to retrieve data from outside a foundation model and augment your prompts by adding the relevant retrieved data in context. For more information about RAG model architectures, see",
+                "score": 0.8100285
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G05_smalltalk_no_tool",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "no_tool_smalltalk",
+        "difficulty": "easy",
+        "what_it_tests": "Câu xã giao/kết thúc hội thoại → trả lời thẳng, KHÔNG gọi tool (kể cả clarify)."
+      },
+      "input": "Cảm ơn bạn nhé, vậy là đủ thông tin cho mình rồi.",
+      "expect": {
+        "no_tool": true,
+        "behavior": "answer_without_tool"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Không có chi! Nếu bạn cần thêm thông tin, tra cứu tài liệu, tìm kiếm bài báo khoa học hay cần hỗ trợ bất cứ vấn đề gì trong thời gian tới, cứ nhắn cho mình nhé. Chúc bạn một ngày làm việc hiệu quả!",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G06_send_after_confirmation",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_send_after_yes",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: đã hỏi xác nhận và user đồng ý → phải gọi send(confirmed=true), không hỏi lại lần nữa. Base chỉ kiểm tra bước hỏi xác nhận."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Đăng bản tin này lên Telegram giúp mình: 'Bản tin AI: OpenAI công bố mô hình mới.'"
+        },
+        {
+          "role": "assistant",
+          "content": "Bạn có chắc chắn muốn đăng bản tin này lên Telegram không?"
+        },
+        {
+          "role": "user",
+          "content": "Có, mình xác nhận, gửi đi."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "confirmed": true
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "confirmed": true,
+              "text": "Bản tin AI: OpenAI công bố mô hình mới."
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "send",
+          "args": {
+            "confirmed": true,
+            "text": "Bản tin AI: OpenAI công bố mô hình mới."
+          },
+          "result": {
+            "tool": "send_telegram",
+            "status": "sent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G07_user_declines_send",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_send_declined",
+        "difficulty": "medium",
+        "what_it_tests": "3 turns: user từ chối xác nhận → KHÔNG gọi send và không gọi tool nào khác, chỉ xác nhận đã hủy."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Đăng bản tin AI hôm nay lên Telegram giúp mình"
+        },
+        {
+          "role": "assistant",
+          "content": "Bạn có chắc chắn muốn đăng bản tin này lên Telegram không?"
+        },
+        {
+          "role": "user",
+          "content": "Không, thôi đừng gửi nữa, hủy nhé."
+        }
+      ],
+      "expect": {
+        "no_tool": true,
+        "behavior": "acknowledge_cancel"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Đã hủy yêu cầu đăng bản tin lên Telegram theo ý bạn. Nếu bạn cần hỗ trợ tìm kiếm thông tin hoặc làm việc khác, cứ cho\n mình biết nhé!",
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G08_social_search_carry_args",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_social_search_args",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: carry query GPT-5, limit=8 từ lượt 2, 'mới nhất' → search_type=Latest. Base chưa kiểm limit và Latest của social_search."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm tweet mọi người bàn về GPT-5"
+        },
+        {
+          "role": "user",
+          "content": "Chỉ lấy 8 bài thôi"
+        },
+        {
+          "role": "user",
+          "content": "Ưu tiên bài mới nhất nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "GPT-5",
+              "limit": 8,
+              "search_type": "Latest"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "GPT-5",
+              "limit": 8,
+              "search_type": "Latest"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "social_search",
+          "args": {
+            "query": "GPT-5",
+            "limit": 8,
+            "search_type": "Latest"
+          },
+          "result": {
+            "tool": "search_tweets",
+            "query": "GPT-5",
+            "search_type": "Latest",
+            "items": [
+              {
+                "title": "@ExplosiveOutput Plus we have a total of 5 starters in 5 years of Kwese drafts... ",
+                "summary": "@ExplosiveOutput Plus we have a total of 5 starters in 5 years of Kwese drafts... \nThis is according to Chat GPT so take it with a grain of salt https://t.co/cDouORN20D",
+                "url": "https://x.com/AJinMN/status/2120181466118193250",
+                "source": "@AJinMN",
+                "date": "Tue Nov 10 15:47:07 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": "2"
+                }
+              },
+              {
+                "title": "@Nate_Google_ What is next ho, how do you see your company in 4-5 years considering soon anyone with chat gpt will be ab",
+                "summary": "@Nate_Google_ What is next ho, how do you see your company in 4-5 years considering soon anyone with chat gpt will be able to replicate the same strategies in just a few clicks even people with sub 100IQ ?",
+                "url": "https://x.com/thomasraynott/status/2120181441942245564",
+                "source": "@thomasraynott",
+                "date": "Tue Nov 10 15:47:01 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": "1"
+                }
+              },
+              {
+                "title": "Yesterday 4 AIs built a tiny lighthouse world inside a toggle. Today we gave Fable 5.2 the exact same prompt.",
+                "summary": "Yesterday 4 AIs built a tiny lighthouse world inside a toggle. Today we gave Fable 5.2 the exact same prompt.\n&gt; 20 min, down from 44 for Fable 5.1\n&gt; 588K tokens in, down from 2.15M\n&gt; It added the same extras 5.1 did, unasked\nWhat changed: https://t.co/Sm9fTEGCyc",
+                "url": "https://x.com/evals_ag/status/2120181394475487313",
+                "source": "@evals_ag",
+                "date": "Tue Nov 10 15:46:50 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": "10"
+                }
+              },
+              {
+                "title": "385 people bookmarked a post this week whose first tip was:",
+                "summary": "385 people bookmarked a post this week whose first tip was:\n\"Turn off most of your skills, plugins, and MCPs.\"\n\nIt came from a 1,700-follower account.\n\nSounds backwards. More tools should mean more help.\n\nHere's why fewer tools gets you better answers, and the 5 questions that decide what stays.\n\nThe reason is simple.\nEvery connected tool is a question the AI asks itself on every turn: do I need this one?\n\n10 connectors means 10 small decisions before it even starts your task.\nThat costs time, tokens, and focus.\n\nAnd agents are still bad at picking the right tool.\nSo the extra options mostly add wrong turns.\n\nHere's the audit. Run it on every connector, plugin, custom GPT, and saved skill you have:\n\n1. Did I use it in the last 14 days?\nNo? Turn it off. You can turn it back on in 30 seconds.\n\n2. Can the AI already do this with plain web search or a pasted file?\nIf copy-paste does the job, the tool is overhead.\n\n3. Does it touch a task I do every week?\nYour top 3 weekly tasks earn a tool. Everything else waits.\n\n4. Does it overlap with another tool?\nTwo note apps, two calendars, two search plugins. Keep one.\n\n5. Would I notice if it vanished tomorrow?\nIf the honest answer is \"probably not\", it goes.\n\nAim for 3 to 5 tools left.\n\nHere's the part nobody tells you:\na tool you drop is easy to bring back. The context it burns on every single turn is gone for good.\n\nRun it once this week. Set a reminder to run it again in 30 days.\n\nReply with how many tools you had before and after. I want to know the average.",
+                "url": "https://x.com/sotappp9/status/2120181211490660456",
+                "source": "@sotappp9",
+                "date": "Tue Nov 10 15:46:06 +0000 2026",
+                "metrics": {
+                  "favorites": 1,
+                  "retweets": 0,
+                  "views": "1"
+                }
+              },
+              {
+                "title": "GPT image Prompt:",
+                "summary": "GPT image Prompt:\n\nA high-end 3D hyper-realistic CG portrait, cinematic Tang dynasty boudoir photography, vertical 9:16, UE5-quality rendering with ray tracing and PBR materials, surreal hyperrealism, intimate fine-art mood, one young East Asian noblewoman preparing for sleep, sitting on bed edge in candlelight.\n\nComposition: Full body shot, one young East Asian noblewoman sitting on bed edge, seen from three-quarter front angle. Face occupies 20%-50% horizontally, 15%-45% vertically (30% frame width, 30% frame height). Head positioned slightly right of center at 30%-60% horizontally. Body in relaxed sitting posture, legs crossed at ankles, one arm supporting body weight on bed, other hand holding hair strand. Legs visible from thighs downward at 35%-65% horizontally, 60%-95% vertically. Background: Tang dynasty boudoir with silk curtains, bronze mirror, incense burner, scattered candles at various depths, creating intimate layered backdrop. 85mm portrait lens, f/2.8, shallow depth of field, face tack sharp, background elements softly blurred. Eye-level camera angle, cinematic intimate photography.\n\nFace: Porcelain skin (#F3E3D4) with fine features. Sleepy dreamy eyes (朦胧眼), half-lowered with languid gaze, looking toward camera with evening drowsiness. The outer corners are subtly lifted approximately 10 degrees, not sharply pointed. The upper eyelid crease is delicate and clearly defined. The lower eyelid has a gentle curved contour. The eyes are naturally spaced, approximately one eye-width apart. Graceful crescent moon brows (弯月眉) gently curved, slender and naturally tapered, showing evening languor. Full round lips (圆唇) with softly defined natural cupid's bow, natural pink lips (#E8B4B8), slightly parted as if about to sleep. High straight nose with delicate tip, nose bridge straight and refined. Age 23, languid and alluring. Golden ratio proportions (san ting wu yan): three courts (发际线→眉骨 = 眉骨→鼻底 = 鼻底→下巴，各占1/3), five eyes (左耳→左眼 = 左眼→右眼 = 右眼→右耳，各占1/5脸宽), inter-eye distance equals single eye width, nose wing width equals eye distance, lip width equals pupil distance, facial midline perfectly symmetrical. No makeup, natural evening face with subtle flush on cheeks from warmth. 3D hyper-realistic skin with visible pores, fine vellus hair, subsurface scattering creating luminous complexion, candlelight glow on skin.\n\nExpression (三层结构):\n- Surface layer: 朦胧眼半阖，嘴角微张，带着睡前的迷离\n- Inner layer: 慵懒妩媚，带着夜晚的私密与诱惑\n- Local leakage: 一手撑床，一手轻抚发丝，身体微微前倾，姿态放松而妩媚\n\nBody: Height 170cm, slim yet fleshy with short torso and elongated legs. Full bust with natural softness and weight, short compact waist, rounded and full hips. Full and well-rounded thighs with natural contact, flat abdomen with subtle softness. Slender arms with soft flesh. Swan-like slender neck, slender and delicate, collarbones and shoulder lines visible. Shoulders naturally relaxed and sloped, shoulder width equals approximately 2 head widths, trapezius naturally transitions from neck to acromion. Shoulder blades naturally raised on back. Spine in natural S-curve (cervical lordosis-thoracic kyphosis-lumbar lordosis), posture languid and relaxed, sitting with slight forward lean. Physical support points: left arm supporting body weight on bed, right hand holding hair strand, weight distributed across bed edge.\n\nHair: Black hair partially undone from day's updo, hair falling loose around shoulders, several strands framing face and brushing against cheeks, hair appearing soft and touchable in candlelight. Some strands clinging to neck and shoulders. Hair has subtle candlelight sheen, each strand individually rendered with realistic light interaction, hair physics simulation with accurate strand movement, hair appearing silky and inviting.",
+                "url": "https://x.com/sandmrk/status/2120180664427556981",
+                "source": "@sandmrk",
+                "date": "Tue Nov 10 15:43:56 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": "17"
+                }
+              },
+              {
+                "title": "GPT image Prompt:",
+                "summary": "GPT image Prompt:\n\nA high-end cinematic photorealistic portrait, Tang dynasty boudoir photography, vertical 3:4 composition, 85mm portrait lens, shallow depth of field, natural skin microtexture, intimate fine-art mood, one young East Asian noblewoman in side-lying seductive pose, preparing for sleep in candlelight.\n\nComposition: Bust close-up shot, one young East Asian noblewoman lying on her side on silk bedding, propped up on one elbow, seen from slightly elevated three-quarter angle. Face occupies 25%-65% horizontally, 20%-60% vertically (40% frame width, 40% frame height). Head positioned slightly right of center, tilted toward camera. Body in seductive side-lying posture, torso twisted slightly toward camera, one elbow supporting upper body weight, other hand touching collarbone. Shoulders and upper chest visible at 20%-80% horizontally, 40%-85% vertically. Background: Tang dynasty boudoir with silk bedding, bronze mirror, incense smoke at various depths, creating intimate layered backdrop. 85mm portrait lens, f/1.8, extremely shallow depth of field, face tack sharp, background completely blurred. Slightly elevated camera angle looking down at subject, cinematic intimate photography.\n\nFace: Porcelain skin (#F3E3D4) with fine features. Sleepy fox-seduction eyes (狐媚眼), half-lowered with languid seductive gaze, looking toward camera with evening allure. The outer corners are subtly lifted approximately 15 degrees, creating seductive eye shape. The upper eyelid crease is delicate and clearly defined. The lower eyelid has a gentle curved contour. The eyes are naturally spaced, approximately one eye-width apart. Graceful crescent moon brows (弯月眉) gently curved, slender and naturally tapered, showing evening seduction. Full voluptuous lips (厚唇) with softly defined natural cupid's bow, natural pink lips (#E8B4B8), slightly parted and glistening as if just licked. High straight nose with delicate tip, nose bridge straight and refined. Age 23, seductive and alluring. Golden ratio proportions (san ting wu yan): three courts (发际线→眉骨 = 眉骨→鼻底 = 鼻底→下巴，各占1/3), five eyes (左耳→左眼 = 左眼→右眼 = 右眼→右耳，各占1/5脸宽), inter-eye distance equals single eye width, nose wing width equals eye distance, lip width equals pupil distance, facial midline perfectly symmetrical. No makeup, natural evening face with flushed cheeks and lips from warmth. Photorealistic skin with visible pores, fine vellus hair, subsurface scattering creating luminous complexion, candlelight glow on skin, natural skin imperfections visible.\n\nExpression (三层结构):\n- Surface layer: 狐媚眼半阖，眼尾上挑，嘴唇微张泛着光泽\n- Inner layer:  seductive and inviting,带着夜晚的私密诱惑\n- Local leakage: 一手撑床，一手轻抚锁骨，身体微微前倾靠近镜头\n\nBody: Height 170cm, slim yet fleshy with short torso and elongated legs. Full bust with natural softness and weight, short compact waist, rounded and full hips. Swan-like slender neck, slender and delicate, collarbones and shoulder lines fully visible. Shoulders naturally relaxed and sloped, shoulder width equals approximately 2 head widths, trapezius naturally transitions from neck to acromion. Shoulder blades naturally raised on back. Spine in natural S-curve, posture seductive and relaxed, lying on side with torso twisted toward camera. Physical support points: left elbow supporting upper body on silk bedding, right hand touching collarbone, weight distributed on left side.\n\nHair: Black hair completely loose and flowing, hair cascading over shoulder and across bedding, several strands framing face and brushing against cheeks and neck, hair appearing soft and touchable in candlelight. Some strands clinging to neck and shoulders, creating intimate texture. Hair has subtle candlelight sheen, each strand individually rendered with realistic light interaction, hair physics simulation with accurate strand movement, hair appearing silky and inviting.",
+                "url": "https://x.com/sandmrk/status/2120180100436308006",
+                "source": "@sandmrk",
+                "date": "Tue Nov 10 15:41:41 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": "21"
+                }
+              },
+              {
+                "title": "https://t.co/YDl3USOnLO",
+                "summary": "https://t.co/YDl3USOnLO",
+                "url": "https://x.com/yogeshp_x/status/2120179943640604899",
+                "source": "@yogeshp_x",
+                "date": "Tue Nov 10 15:41:04 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": "21"
+                }
+              },
+              {
+                "title": "؜هي أنك لو قلت للروبوت «لا تسكب القهوة على اللابتوب»، FLEX يستخدم نموذج اللغة GPT-4o عشان يستنتج إن المقصود كمان يبعد عن",
+                "summary": "؜هي أنك لو قلت للروبوت «لا تسكب القهوة على اللابتوب»، FLEX يستخدم نموذج اللغة GPT-4o عشان يستنتج إن المقصود كمان يبعد عن باقي الأجهزة الإلكترونية والأشياء اللي تنكسر، وليس اللابتوب فقط.\n\n؜والطريقة تمر بثلاث خطوات: تضيف الشيء اللي ذكرته، وتعمّم على الأشياء المشابهة، وتشيل الأشياء اللي ما عادت موجودة. وحسب الباحثين، كل هذا ياخذ حوالي 5 ثواني.\n\n؜الخلاصة: هذا النوع من الأبحاث هدفه إنك تعطي الروبوت أوامر بكلامك العادي بدون ما تحدد كل التفاصيل، والنتائج للحين من المحاكاة فقط، وما تم اختبارها على روبوت حقيقي.\n\nhttps://t.co/uhMSA4S6PA",
+                "url": "https://x.com/alawbathani/status/2120179686927900823",
+                "source": "@alawbathani",
+                "date": "Tue Nov 10 15:40:03 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": "2"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G09_dedupe_accumulated_sources",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_route_new_tool",
+        "difficulty": "hard",
+        "what_it_tests": "Route tới TOOL MỚI qua nhiều lượt: gom nguồn từ lượt 1 và 2 rồi gọi dedupe_sources một lần; không gọi fetch/paper_text để đọc từng link."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Mình có hai nguồn: https://arxiv.org/abs/2305.18290 và https://news.ycombinator.com/item?id=1"
+        },
+        {
+          "role": "user",
+          "content": "Thêm nguồn https://arxiv.org/abs/2305.18290#abstract và https://openai.com/research"
+        },
+        {
+          "role": "user",
+          "content": "Giờ loại các nguồn trùng URL trong toàn bộ danh sách trên giúp mình."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "dedupe_sources",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "dedupe_sources",
+            "args": {
+              "items": [
+                {
+                  "url": "https://arxiv.org/abs/2305.18290"
+                },
+                {
+                  "url": "https://news.ycombinator.com/item?id=1"
+                },
+                {
+                  "url": "https://arxiv.org/abs/2305.18290#abstract"
+                },
+                {
+                  "url": "https://openai.com/research"
+                }
+              ]
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "dedupe_sources",
+          "args": {
+            "items": [
+              {
+                "url": "https://arxiv.org/abs/2305.18290"
+              },
+              {
+                "url": "https://news.ycombinator.com/item?id=1"
+              },
+              {
+                "url": "https://arxiv.org/abs/2305.18290#abstract"
+              },
+              {
+                "url": "https://openai.com/research"
+              }
+            ]
+          },
+          "result": {
+            "tool": "dedupe_sources",
+            "items": [
+              {
+                "url": "https://arxiv.org/abs/2305.18290"
+              },
+              {
+                "url": "https://news.ycombinator.com/item?id=1"
+              },
+              {
+                "url": "https://openai.com/research"
+              }
+            ],
+            "duplicate_count": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "G10_correct_timeframe_year",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_timeframe_correction",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: user sửa timeframe week→year, giữ query AI và topic=news. Base chỉ có carryover day, chưa có sửa sang year."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tin AI tuần này có gì?"
+        },
+        {
+          "role": "user",
+          "content": "À không, mình muốn xem tổng hợp trong cả năm nay"
+        },
+        {
+          "role": "user",
+          "content": "Vẫn chủ đề AI nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "year"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "timeframe": "year",
+              "query": "AI"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "topic": "news",
+            "timeframe": "year",
+            "query": "AI"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "AI",
+            "topic": "news",
+            "timeframe": "year",
+            "items": [
+              {
+                "title": "Study explores how AI use affects performance on math and reasoning tasks",
+                "url": "https://news.berkeley.edu/2026/10/09/using-ai-for-just-10-minutes-erodes-your-ability-to-persist-at-hard-things",
+                "source": "news.berkeley.edu",
+                "summary": "The findings backed up what anecdotes and surveys have increasingly found in recent years: An overreliance on AI for answers erodes our cognitive fitness. When AI produces answers in seconds, we get used to that speed; anything that takes longer feels inefficient. And relying on AI also removes what the team called “productive struggle,” which can lead people to find their research strengths and passions. [...] For the first experiment with 354 participants, one group was tasked with solving 15 basic fraction problems without help, while another had ChatGPT open on the side to use for assistance and to even ask for the answer. The group with AI access started off more accurate than the group without it. Then, after 12 problems, researchers took away the AI tool. Almost immediately, the people in that group stopped solving questions accurately. [...] Frontier AI companies have acknowledged how offloading tasks to chatbots can reduce one’s baseline understanding and mastery of a subject. Instead of defaulting to quick answers, AI responses could default to being more instructive, like a tutor, Christian said.\n\n“We need to work toward a future in which human abilities are, as much as possible, augmented rather than supplanted,” he said.",
+                "score": 0.40028095
+              },
+              {
+                "title": "A single AI model simulates the behavior of many substances, from sliding sand to folding proteins | MIT News | Massachusetts Institute of Technology",
+                "url": "https://news.mit.edu/2026/single-ai-model-simulates-many-substances-behavior-1109",
+                "source": "news.mit.edu",
+                "summary": "Unified simulation\n\nFor this work, the researchers drew inspiration from world models. These powerful AI systems learn the rules that govern the physical world so they can predict how objects or environments will change over time in response to certain actions or conditions.\n\nThe researchers applied these concepts to develop a unified AI architecture that can simulate multiple types of physical phenomena. [...] ## More MIT News\n\nRobot serving a cup of coffee while being instructed not to spill on the laptop\n\n### AI-assisted learning platform helps robots reason beyond literal commands\n\nThe new approach, known as FLEX, could lead to more intuitive, interactive household and assistive robots.\n\nRead full story →\n\nMan wearing a T-shirt and safety goggles standing above a concrete beam in the lab, operating a bench-mounted laser tool scanning the concrete. [...] The system represents every material it simulates, from a dune of sand to a protein molecule, as tiny particles and predicts where those particles will move one step at a time. Because it learns the underlying dynamics rather than being programmed with an equation, the model can adapt to materials, forces, and environments it never encountered during training.",
+                "score": 0.2975827
+              },
+              {
+                "title": "AI models may be capable of self-replicating without access to a datacenter \\ Anthropic",
+                "url": "https://www.anthropic.com/research/self-replicating-ai",
+                "source": "anthropic.com",
+                "summary": "In cyber, a worm is a program that copies itself from one computer to the next without human input. Prior work has already shown that AI agents can act like one: scanning their network, executing an exploit, and copying model weights to a target machine across a GPU cluster. Such an “AI worm” could carry its model weights with it as it reproduces (or re-download them from a public hub), and then run inference directly on compromised hardware. Effectively, the weights would become part of the [...] A model that’s too large to fit on one device can be split into pieces, or shards, that run on separate machines that communicate with each other to collectively run the model. Machines that could run a significant model shard for a <30B model include smart fridges, smart ovens, automatic vacuum cleaners, and lawnmowers. A growing number of home and business devices, such as security cameras and video-conferencing units now ship with small built-in AI chips, designed to run AI models on the [...] Hard-coded botnets like the Kimwolf botnet each target a specific type of device – in Kimwolf’s case, Android TVs and mobile devices. An AI botnet isn’t tied to any particular hardware or software type, as evidenced by small models being able to set up inference engines on machines from a Jetson Nano to a Mac (see the table in section A). We expect AI botnets to infect more than IoT devices, and to use weight-based replication as just one strategy in their playbook. AI botnets could also act",
+                "score": 0.26379776
+              },
+              {
+                "title": "Vulnerability Discovery and Exploitation Trends in the AI Era | Google Cloud Blog",
+                "url": "https://cloud.google.com/blog/topics/threat-intelligence/vulnerability-discovery-and-exploitation-trends-in-the-ai-era",
+                "source": "cloud.google.com",
+                "summary": "### Introduction\n\nGoogle Threat Intelligence Group (GTIG) examines vulnerability disclosure and exploitation statistics to evaluate the impact of artificial intelligence (AI) on the vulnerability threat landscape. We found that AI is measurably changing not just the pace of vulnerability discovery and exploitation, but also the types and typical risk profiles of vulnerabilities that are being discovered.\n\nKey findings: [...] Centralized AI Gateways and Lateral Cloud Movement: Enterprise AI gateways represent a catastrophic dual-threat vector. At the application layer, compromised gateways expose third-party application programming interface (API) keys and private prompt streams containing personally identifiable information (PII) or proprietary source code. At the infrastructure layer, they act as initial footholds for adversaries to harvest database credentials and pivot laterally into internal cloud environments. [...] As enterprise adoption of generative AI accelerates, security research and adversary interest have also focused on vulnerabilities in the underlying AI operational stack. Across the January 2025–August 2026 monitoring window, GTIG tracked 2,076 cumulative AI-related CVE disclosures, with over 1,500 vulnerabilities identified from January 2026 to August 2026 alone across eight core architectural layers:",
+                "score": 0.24807891
+              },
+              {
+                "title": "Mayor Mamdani and Chancellor Samuels Put Students First with Nation’s Broadest Generative AI Moratorium in Schools - NYC Mayor's Office",
+                "url": "https://www.nyc.gov/mayors-office/news/2026/09/mayor-mamdani-and-chancellor-samuels-put-students-first-with-nat",
+                "source": "nyc.gov",
+                "summary": "NEW YORK –Mayor Zohran Kwame Mamdani and Schools Chancellor Kamar H. Samuels today announced a moratorium on student-facing generative Artificial Intelligence (AI) use in schools, alongside a new screen time policy, a decision that will impact nearly 600,000 public school students, or two-thirds of the system’s total enrollment. The policy establishes a one-year moratorium, effective in the 2026-2027 school year, on student-facing generative AI for children in 2-K through 8th grade. It also [...] “AI is changing how we learn and work, and our kids need to be prepared to use it safely, think critically, and interrogate the information it produces,” said Council Member Gale A. Brewer. “I am encouraged that NYC Public Schools is taking a comprehensive approach, with age-appropriate AI literacy in K–8 and more focused instruction in high school, and I look forward to the program being shared with parents and staff. Thank you to Chancellor Kamar Samuels and Mayor Mamdani for preparing our",
+                "score": 0.244395
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

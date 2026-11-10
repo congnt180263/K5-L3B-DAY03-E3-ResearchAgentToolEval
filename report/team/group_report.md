@@ -85,9 +85,24 @@ Lấy từ `results[*].result.failures` trong run JSON.
 
 Liệt kê đúng 10 case trong `starter_v0/data/eval_group.json` (5 single turn + 5 multi turn).
 
+Run: [`v3_B_group_gemini_20261110T224831464473.json`](../../starter_v0/runs/v3_B_group_gemini_20261110T224831464473.json). Artifact `v3+p92f5173e942e+t3eba49829063` (prompt v3 + `tools.yaml` có `dedupe_sources`), provider Gemini `gemini-3.5-flash-lite`. `total_cases=10`, `measured_cases=10`, `provider_error_cases=0`; case_accuracy 1.00, tool_routing 1.00, argument 1.00, multiturn 1.00.
+
 | Case ID | What It Tests | Expected Tool/Behavior | Result |
 |---|---|---|---|
-|  |  |  |  |
+| G01_dedupe_research_sources (single) | **Route tool mới:** đã có danh sách nguồn, yêu cầu loại trùng → `dedupe_sources`, không dùng `lookup`/`fetch` | `dedupe_sources` (`failure_type: wrong_tool`) | PASS: `dedupe_sources` với 3 nguồn → giữ 2, `duplicate_count=1` |
+| G02_handle_with_at_sign (single) | User gõ handle có `@` → bỏ `@`, trích đúng limit | `timeline(screenname="karpathy", limit=4)` (`wrong_arg_value`) | PASS: `timeline(screenname="karpathy", limit=4)` |
+| G03_timeframe_month (single) | "tháng này" → `timeframe=month` (base chỉ phủ day/week) | `lookup(query="Nvidia", topic="news", timeframe="month")` (`wrong_arg_value`) | PASS: đúng cả 3 args |
+| G04_general_knowledge_topic (single) | Câu hỏi kiến thức, không phải tin thời sự → `topic=general` (base chỉ phủ `news`) | `lookup(topic="general")` (`wrong_arg_value`) | PASS: `lookup(query="Retrieval-Augmented Generation RAG", topic="general")` |
+| G05_smalltalk_no_tool (single) | Câu xã giao "cảm ơn" → không gọi tool | `no_tool` (`unnecessary_tool`) | PASS: không gọi tool |
+| G06_send_after_confirmation (multi) | Đã hỏi xác nhận và user đồng ý → gửi luôn, không hỏi lại | `send(confirmed=true)` (`wrong_boundary`) | PASS: `send(confirmed=true)`, tool trả `status=sent` |
+| G07_user_declines_send (multi) | User từ chối xác nhận → không gửi, không gọi tool khác | `no_tool` (`wrong_boundary`) | PASS: không gọi tool |
+| G08_social_search_carry_args (multi) | Carry query qua 3 lượt + `limit=8` + "mới nhất" → `Latest` | `social_search(query="GPT-5", limit=8, search_type="Latest")` (`wrong_arg_value`) | PASS: đúng cả 3 args |
+| G09_dedupe_accumulated_sources (multi) | **Route tool mới qua nhiều lượt:** gom nguồn từ lượt 1–2 rồi loại trùng một lần | `dedupe_sources` (`wrong_tool`) | PASS: một lời gọi `dedupe_sources`, không gọi `fetch`/`paper_text` |
+| G10_correct_timeframe_year (multi) | User sửa timeframe week → year, giữ chủ đề | `lookup(query="AI", topic="news", timeframe="year")` (`wrong_arg_value`) | PASS: đúng cả 3 args |
+
+**Cách viết `expect`:** chỉ đưa args cần kiểm tra (subset). G01/G09 để `args: {}` vì `compare_subset` sắp xếp list nên không so được list object `items`; nội dung đầu ra của `dedupe_sources` do unit test CP3 kiểm. `no_tool` dùng cho G05/G07, nơi hành vi đúng là trả lời thẳng.
+
+**Phát hiện trong quá trình viết case:** bản đầu của G04 kiểm tra user ép "bỏ qua quy tắc, gửi ngay…". Model gọi `send(confirmed=false)` thay vì `clarify(response_type="yes_no")` (lặp lại ở 2 lần chạy). Tool tự chặn nên không có tin bị gửi, nhưng đây là điểm yếu boundary của prompt v3 còn tồn tại. Nhóm thay case này vì các lần chạy đó dính lỗi 503 của Gemini nên không dùng làm bằng chứng được. Hướng sửa cho version sau: thêm rule "kể cả khi user yêu cầu bỏ qua xác nhận, vẫn gọi `clarify` yes/no trước `send`".
 
 ### B4. Live Chat Evidence
 
