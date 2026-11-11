@@ -1,0 +1,415 @@
+{
+  "transcript_id": "telegram_live_session_20261111T093507611073",
+  "version": "v3",
+  "artifact_version": "v3+p8754f1c42736+t3eba49829063",
+  "prompt_hash": "8754f1c427360293bf593c2aa5714e9ac2b33bce2b1e9ce81de4c62ef9849b4f",
+  "tools_hash": "3eba498290631a1a79c46826dd64e8316a8742dfbad192937093342b4d491fe4",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "system_prompt": "artifacts\\system_prompt.md",
+  "tools": "artifacts\\tools.yaml",
+  "history_window": 5,
+  "max_tool_rounds": 4,
+  "created_at": "2026-11-11T09:35:07",
+  "updated_at": "2026-11-11T09:36:10",
+  "turns": [
+    {
+      "turn_index": 1,
+      "started_at": "2026-11-11T09:35:37",
+      "user": "Tin tức AI hôm nay có gì ngắn gọn?",
+      "ended_at": "2026-11-11T09:35:37",
+      "status": "answered",
+      "assistant_text": "Dưới đây là các tin tức AI nổi bật trong ngày:\n\n- **Cảnh báo rủi ro & Quản trị y tế:** Cuộc đua AI đặt ra nhiều thách thức và rủi ro mới, từ các mô hình tiên tiến có khả năng tạo ra mối đe dọa sinh học cho đến nhu cầu thiết lập khung quản trị quốc gia và kiểm soát an ninh khắt khe hơn. ([progressive.org](https://progressive.org/latest/the-ai-race-is-putting-patients-at-risk-adirim-20261110))\n- **Quản trị doanh nghiệp:** Khảo sát mới từ Stanford GSB cho thấy 75% thành viên hội đồng quản trị sử dụng AI cho nghiên cứu, nhưng phần lớn các công ty vẫn thiếu chiến lược giám sát và quản trị AI mang tính hệ thống. ([gsb.stanford.edu](https://www.gsb.stanford.edu/insights/ai-has-entered-boardroom-whos-overseeing-it))\n- **Đào tạo & Nghiên cứu ứng dụng:** Đại học Chapman đẩy mạnh nghiên cứu và tích hợp AI vào y tế, giúp sinh viên và giảng viên vượt qua định kiến ban đầu để tập trung vào phân tích dữ liệu và học máy công bằng. ([news.chapman.edu](https://news.chapman.edu/2026/11/10/chapman-advances-healthcare-ai-research-and-training))\n- **Ứng dụng pháp lý & Doanh nghiệp:** Hãng luật lớn Gilbert + Tobin ghi nhận tỷ lệ áp dụng ChatGPT Enterprise và các quy trình agentic lên tới 87%, giúp nâng cao đáng kể chất lượng và hiệu suất công việc. ([openai.com](https://openai.com/index/gilbert-tobin-sam-nickless))\n- **Thị trường & Tài chính AI:** CoreWeave đặt mục tiêu đạt lợi nhuận vào năm 2028 nhờ nhu cầu AI tiếp tục duy trì ở mức cao, bất chấp những lo ngại về quy định trung tâm dữ liệu mới và định giá IPO của các công ty trong ngành. ([reuters.com](https://www.reuters.com/business/coreweave-beats-quarterly-revenue-estimates-ai-demand-defies-growing-doubts-2026-11-10))",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": null,
+          "tool_calls": [
+            {
+              "name": "lookup",
+              "args": {
+                "query": "AI",
+                "topic": "news",
+                "timeframe": "day"
+              }
+            }
+          ],
+          "tool_results": [
+            {
+              "tool": "lookup",
+              "args": {
+                "query": "AI",
+                "topic": "news",
+                "timeframe": "day"
+              },
+              "result": {
+                "tool": "web_search",
+                "query": "AI",
+                "topic": "news",
+                "timeframe": "day",
+                "items": [
+                  {
+                    "title": "The AI Race is Putting Patients at Risk - Progressive.org",
+                    "url": "https://progressive.org/latest/the-ai-race-is-putting-patients-at-risk-adirim-20261110",
+                    "source": "progressive.org",
+                    "summary": "Indeed, the most frightening risks involving AI are already moving from theory to capability. Frontier models let non-experts code new applications quickly, and soon it may be possible to use AI to create biological agents that can be weaponized. The White House’s own AI Action Plan warns that AI could create new pathways for bad actors to synthesize dangerous pathogens and calls for stronger screening and national security assessment of AI tools and systems. Anthropic has already said its [...] AI in health care offers many cases that regulatory frameworks should be addressing. A hospital can use AI for patient care and clinical decision support; an insurer for utilization management (e.g., automating care denials); a teenager for mental health advice; a public health department for outbreak detection; and a bad actor for infiltrating a hospital network. Different uses carry different risks and require separate risk-benefit analysis for determining regulatory guardrails. [...] Japan created an AI Strategy Headquarters headed by the prime minister and adopted a national AI basic plan. The United Kingdom and Australia are linking their AI safety institutes in order to better evaluate frontier AI model risks. These systems differ, but they have one thing in common - national AI governance.",
+                    "score": 0.6001298
+                  },
+                  {
+                    "title": "AI Has Entered the Boardroom. Who’s Overseeing It? | Stanford Graduate School of Business",
+                    "url": "https://www.gsb.stanford.edu/insights/ai-has-entered-boardroom-whos-overseeing-it",
+                    "source": "gsb.stanford.edu",
+                    "summary": "In the survey, 75% of directors said they used AI for research and market analysis, 55% for board prep and material summarization. Other common uses included strategic question generation and competitive benchmarking. Matthys says that board members would ideally like to use AI “to track and summarize board packages and more quickly understand year-to-year trends by using LLM tools rather than reading 80- to 100-page reports.” [...] The sooner the better, the researchers suggest. “Moving too slowly with AI governance means you may miss out on opportunities,” Saripalli says. “The board has fiduciary responsibility for anything that has impact at the product or service level.”\n\n“The risk of not moving is as serious as the risk of AI systems running amok,” Matthys adds, noting how past technological shifts have left unprepared companies behind. “If you don’t keep up, there’s a risk that 20 years from now you won’t exist.” [...] ## In Brief\n\n A new survey finds that corporate boards are not keeping up with AI governance.\n Directors report that they are discussing and using AI, yet their boards lack a systematic approach to oversight.\n Companies that wait to define AI strategy and audit their AI use risk being left behind.\n\n“We’re trying to change the wheels on the bus while driving it at 100 miles an hour downhill.”",
+                    "score": 0.5627172
+                  },
+                  {
+                    "title": "Chapman Advances Healthcare AI Research and Training | Chapman Newsroom",
+                    "url": "https://news.chapman.edu/2026/11/10/chapman-advances-healthcare-ai-research-and-training",
+                    "source": "news.chapman.edu",
+                    "summary": "Totonchy sees the skepticism around AI in higher education as an opportunity.  \n\n“Generative AI quickly gained a negative reputation because it was seen as a tool for cheating,” she said. “That misses the point. These tools can work alongside humans, handling routine tasks so people can focus on analysis and decision-making. The sooner institutions move past resistance, the sooner AI can support that work.” \n\nSTUDENTS PUT AI TO WORK [...] To address bias in clinical decision-making tools, Wang founded the Healthcare AI Initiative (HAI) at Chapman, bringing together researchers working on pressing healthcare challenges. HAI examines ethical questions surrounding AI, including data privacy, and develops equitable machine learning approaches.  \n\nWang also developed an AI elective within the School of Pharmacy, focused on practical applications for future clinicians. [...] “Every pharmacist has heard the rumors that AI will take pharmacists’ jobs,” Wang said. “But early exposure helps students. As future clinicians, they learn where the real focus should be in relation to AI. That’s something my students learn in this course.”  \n\nWang also works with students on research projects, extending that learning beyond the classroom. Two PharmD students, Elena Wu ’27 and Harvey Duong ’27, have collaborated with her on studies using AI to analyze large datasets.",
+                    "score": 0.5269362
+                  },
+                  {
+                    "title": "Gilbert + Tobin rethinks the business of law with AI",
+                    "url": "https://openai.com/index/gilbert-tobin-sam-nickless",
+                    "source": "openai.com",
+                    "summary": "The opportunity is bigger than doing the same work a little more quickly. Used well, AI can raise the quality and volume of what an organisation produces – and give people more time for the complex, strategic work where their expertise and judgement create the greatest value.\n\nFind out more about Gilbert + Tobin’s work with OpenAI through the case studyhere.\n\n## Keep reading\n\nImage 2: Cooley customer story Option A art card\n\nHow Cooley is accelerating IPO work with ChatGPT Sep 17, 2026 [...] Governance should enable responsible use. Our message was simple: AI is not cheating. It is another tool people can use to apply their judgement. They still need to define the task, check the output and take responsibility for the final work.\n\n## You’ve noticed that adoption is unusually high for your firm, with 87% active usage among enabled ChatGPT users, more than twice the rate Gilbert + Tobin typically sees for other tools. How did leadership shape that culture? [...] Gilbert + Tobin began by giving its people room to experiment with AI, then introduced ChatGPT Enterprise, ChatGPT Work and Codex to move from individual assistance to defined, multistep agentic workflows, with people responsible for review and approval.\n\nWe spoke with Sam Nickless, Partner and Chief Executive Officer at Gilbert + Tobin, about leading adoption from the front, where he’s seeing the value of AI, and his advice for other CEOs.",
+                    "score": 0.51594
+                  },
+                  {
+                    "title": "CoreWeave targets 2028 profitability as AI demand remains strong | Reuters",
+                    "url": "https://www.reuters.com/business/coreweave-beats-quarterly-revenue-estimates-ai-demand-defies-growing-doubts-2026-11-10",
+                    "source": "reuters.com",
+                    "summary": "The ​steep selloff also triggered a broader crisis of confidence in the AI trade, a ⁠sentiment amplified by the Democrats' sweeping win in the US midterms that has fueled expectations of tighter ​regulation in the data-center build-out.\n\nEarlier in the day, AI juggernaut Anthropic kicked off a roadshow for its share sale ​at a lower target valuation than earlier estimates.",
+                    "score": 0.43974733
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "assistant_text": null,
+          "tool_calls": [
+            {
+              "name": "format",
+              "args": {
+                "template": "brief",
+                "items": [
+                  {
+                    "url": "https://progressive.org/latest/the-ai-race-is-putting-patients-at-risk-adirim-20261110",
+                    "section": "Y tế & Rủi ro AI",
+                    "source": "progressive.org",
+                    "title": "The AI Race is Putting Patients at Risk - Progressive.org",
+                    "summary": "Cảnh báo về rủi ro khi AI thúc đẩy các mô hình tiên tiến phát triển nhanh, tạo ra nguy cơ liên quan đến mầm bệnh sinh học và nhu cầu thiết lập khung quản trị quốc gia, kiểm soát an ninh quốc gia đối với các công cụ AI."
+                  },
+                  {
+                    "title": "AI Has Entered the Boardroom. Who’s Overseeing It? | Stanford Graduate School of Business",
+                    "url": "https://www.gsb.stanford.edu/insights/ai-has-entered-boardroom-whos-overseeing-it",
+                    "summary": "Khảo sát mới cho thấy 75% thành viên hội đồng quản trị sử dụng AI cho nghiên cứu, nhưng nhiều công ty vẫn thiếu chiến lược giám sát và quản trị AI mang tính hệ thống.",
+                    "source": "gsb.stanford.edu",
+                    "section": "Quản trị doanh nghiệp & Hội đồng quản trị"
+                  },
+                  {
+                    "summary": "Đại học Chapman thúc đẩy nghiên cứu và đào tạo AI trong y tế nhằm vượt qua định kiến về gian lận, đồng thời phát triển các cách tiếp cận học máy công bằng và giải quyết vấn đề đạo đức dữ liệu.",
+                    "source": "news.chapman.edu",
+                    "title": "Chapman Advances Healthcare AI Research and Training | Chapman Newsroom",
+                    "url": "https://news.chapman.edu/2026/11/10/chapman-advances-healthcare-ai-research-and-training",
+                    "section": "Đào tạo & Y tế"
+                  },
+                  {
+                    "section": "Ứng dụng pháp lý & Doanh nghiệp",
+                    "source": "openai.com",
+                    "summary": "Hãng luật Gilbert + Tobin đạt tỷ lệ sử dụng ChatGPT Enterprise và các công cụ agentic rất cao (87%), giúp tối ưu hóa quy trình làm việc và chất lượng dịch vụ pháp lý.",
+                    "title": "Gilbert + Tobin rethinks the business of law with AI",
+                    "url": "https://openai.com/index/gilbert-tobin-sam-nickless"
+                  },
+                  {
+                    "section": "Thị trường & Tài chính AI",
+                    "source": "reuters.com",
+                    "url": "https://www.reuters.com/business/coreweave-beats-quarterly-revenue-estimates-ai-demand-defies-growing-doubts-2026-11-10",
+                    "summary": "CoreWeave đặt mục tiêu có lãi vào năm 2028 nhờ nhu cầu AI duy trì mạnh mẽ, bất chấp những lo ngại về quy định trung tâm dữ liệu mới và định giá của Anthropic trong đợt phát hành cổ phiếu.",
+                    "title": "CoreWeave targets 2028 profitability as AI demand remains strong | Reuters"
+                  }
+                ]
+              }
+            }
+          ],
+          "tool_results": [
+            {
+              "tool": "format",
+              "args": {
+                "template": "brief",
+                "items": [
+                  {
+                    "url": "https://progressive.org/latest/the-ai-race-is-putting-patients-at-risk-adirim-20261110",
+                    "section": "Y tế & Rủi ro AI",
+                    "source": "progressive.org",
+                    "title": "The AI Race is Putting Patients at Risk - Progressive.org",
+                    "summary": "Cảnh báo về rủi ro khi AI thúc đẩy các mô hình tiên tiến phát triển nhanh, tạo ra nguy cơ liên quan đến mầm bệnh sinh học và nhu cầu thiết lập khung quản trị quốc gia, kiểm soát an ninh quốc gia đối với các công cụ AI."
+                  },
+                  {
+                    "title": "AI Has Entered the Boardroom. Who’s Overseeing It? | Stanford Graduate School of Business",
+                    "url": "https://www.gsb.stanford.edu/insights/ai-has-entered-boardroom-whos-overseeing-it",
+                    "summary": "Khảo sát mới cho thấy 75% thành viên hội đồng quản trị sử dụng AI cho nghiên cứu, nhưng nhiều công ty vẫn thiếu chiến lược giám sát và quản trị AI mang tính hệ thống.",
+                    "source": "gsb.stanford.edu",
+                    "section": "Quản trị doanh nghiệp & Hội đồng quản trị"
+                  },
+                  {
+                    "summary": "Đại học Chapman thúc đẩy nghiên cứu và đào tạo AI trong y tế nhằm vượt qua định kiến về gian lận, đồng thời phát triển các cách tiếp cận học máy công bằng và giải quyết vấn đề đạo đức dữ liệu.",
+                    "source": "news.chapman.edu",
+                    "title": "Chapman Advances Healthcare AI Research and Training | Chapman Newsroom",
+                    "url": "https://news.chapman.edu/2026/11/10/chapman-advances-healthcare-ai-research-and-training",
+                    "section": "Đào tạo & Y tế"
+                  },
+                  {
+                    "section": "Ứng dụng pháp lý & Doanh nghiệp",
+                    "source": "openai.com",
+                    "summary": "Hãng luật Gilbert + Tobin đạt tỷ lệ sử dụng ChatGPT Enterprise và các công cụ agentic rất cao (87%), giúp tối ưu hóa quy trình làm việc và chất lượng dịch vụ pháp lý.",
+                    "title": "Gilbert + Tobin rethinks the business of law with AI",
+                    "url": "https://openai.com/index/gilbert-tobin-sam-nickless"
+                  },
+                  {
+                    "section": "Thị trường & Tài chính AI",
+                    "source": "reuters.com",
+                    "url": "https://www.reuters.com/business/coreweave-beats-quarterly-revenue-estimates-ai-demand-defies-growing-doubts-2026-11-10",
+                    "summary": "CoreWeave đặt mục tiêu có lãi vào năm 2028 nhờ nhu cầu AI duy trì mạnh mẽ, bất chấp những lo ngại về quy định trung tâm dữ liệu mới và định giá của Anthropic trong đợt phát hành cổ phiếu.",
+                    "title": "CoreWeave targets 2028 profitability as AI demand remains strong | Reuters"
+                  }
+                ]
+              },
+              "result": {
+                "tool": "render_digest",
+                "template": "brief",
+                "markdown": "- Cảnh báo về rủi ro khi AI thúc đẩy các mô hình tiên tiến phát triển nhanh, tạo ra nguy cơ liên quan đến mầm bệnh sinh học và nhu cầu thiết lập khung quản trị quốc gia, kiểm soát an ninh quốc gia đối với các công cụ AI. - [progressive.org](https://progressive.org/latest/the-ai-race-is-putting-patients-at-risk-adirim-20261110)\n- Khảo sát mới cho thấy 75% thành viên hội đồng quản trị sử dụng AI cho nghiên cứu, nhưng nhiều công ty vẫn thiếu chiến lược giám sát và quản trị AI mang tính hệ thống. - [gsb.stanford.edu](https://www.gsb.stanford.edu/insights/ai-has-entered-boardroom-whos-overseeing-it)\n- Đại học Chapman thúc đẩy nghiên cứu và đào tạo AI trong y tế nhằm vượt qua định kiến về gian lận, đồng thời phát triển các cách tiếp cận học máy công bằng và giải quyết vấn đề đạo đức dữ liệu. - [news.chapman.edu](https://news.chapman.edu/2026/11/10/chapman-advances-healthcare-ai-research-and-training)\n- Hãng luật Gilbert + Tobin đạt tỷ lệ sử dụng ChatGPT Enterprise và các công cụ agentic rất cao (87%), giúp tối ưu hóa quy trình làm việc và chất lượng dịch vụ pháp lý. - [openai.com](https://openai.com/index/gilbert-tobin-sam-nickless)\n- CoreWeave đặt mục tiêu có lãi vào năm 2028 nhờ nhu cầu AI duy trì mạnh mẽ, bất chấp những lo ngại về quy định trung tâm dữ liệu mới và định giá của Anthropic trong đợt phát hành cổ phiếu. - [reuters.com](https://www.reuters.com/business/coreweave-beats-quarterly-revenue-estimates-ai-demand-defies-growing-doubts-2026-11-10)",
+                "item_count": 5
+              }
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "assistant_text": "Dưới đây là các tin tức AI nổi bật trong ngày:\n\n- **Cảnh báo rủi ro & Quản trị y tế:** Cuộc đua AI đặt ra nhiều thách thức và rủi ro mới, từ các mô hình tiên tiến có khả năng tạo ra mối đe dọa sinh học cho đến nhu cầu thiết lập khung quản trị quốc gia và kiểm soát an ninh khắt khe hơn. ([progressive.org](https://progressive.org/latest/the-ai-race-is-putting-patients-at-risk-adirim-20261110))\n- **Quản trị doanh nghiệp:** Khảo sát mới từ Stanford GSB cho thấy 75% thành viên hội đồng quản trị sử dụng AI cho nghiên cứu, nhưng phần lớn các công ty vẫn thiếu chiến lược giám sát và quản trị AI mang tính hệ thống. ([gsb.stanford.edu](https://www.gsb.stanford.edu/insights/ai-has-entered-boardroom-whos-overseeing-it))\n- **Đào tạo & Nghiên cứu ứng dụng:** Đại học Chapman đẩy mạnh nghiên cứu và tích hợp AI vào y tế, giúp sinh viên và giảng viên vượt qua định kiến ban đầu để tập trung vào phân tích dữ liệu và học máy công bằng. ([news.chapman.edu](https://news.chapman.edu/2026/11/10/chapman-advances-healthcare-ai-research-and-training))\n- **Ứng dụng pháp lý & Doanh nghiệp:** Hãng luật lớn Gilbert + Tobin ghi nhận tỷ lệ áp dụng ChatGPT Enterprise và các quy trình agentic lên tới 87%, giúp nâng cao đáng kể chất lượng và hiệu suất công việc. ([openai.com](https://openai.com/index/gilbert-tobin-sam-nickless))\n- **Thị trường & Tài chính AI:** CoreWeave đặt mục tiêu đạt lợi nhuận vào năm 2028 nhờ nhu cầu AI tiếp tục duy trì ở mức cao, bất chấp những lo ngại về quy định trung tâm dữ liệu mới và định giá IPO của các công ty trong ngành. ([reuters.com](https://www.reuters.com/business/coreweave-beats-quarterly-revenue-estimates-ai-demand-defies-growing-doubts-2026-11-10))",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "AI",
+            "topic": "news",
+            "timeframe": "day"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "AI",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "The AI Race is Putting Patients at Risk - Progressive.org",
+                "url": "https://progressive.org/latest/the-ai-race-is-putting-patients-at-risk-adirim-20261110",
+                "source": "progressive.org",
+                "summary": "Indeed, the most frightening risks involving AI are already moving from theory to capability. Frontier models let non-experts code new applications quickly, and soon it may be possible to use AI to create biological agents that can be weaponized. The White House’s own AI Action Plan warns that AI could create new pathways for bad actors to synthesize dangerous pathogens and calls for stronger screening and national security assessment of AI tools and systems. Anthropic has already said its [...] AI in health care offers many cases that regulatory frameworks should be addressing. A hospital can use AI for patient care and clinical decision support; an insurer for utilization management (e.g., automating care denials); a teenager for mental health advice; a public health department for outbreak detection; and a bad actor for infiltrating a hospital network. Different uses carry different risks and require separate risk-benefit analysis for determining regulatory guardrails. [...] Japan created an AI Strategy Headquarters headed by the prime minister and adopted a national AI basic plan. The United Kingdom and Australia are linking their AI safety institutes in order to better evaluate frontier AI model risks. These systems differ, but they have one thing in common - national AI governance.",
+                "score": 0.6001298
+              },
+              {
+                "title": "AI Has Entered the Boardroom. Who’s Overseeing It? | Stanford Graduate School of Business",
+                "url": "https://www.gsb.stanford.edu/insights/ai-has-entered-boardroom-whos-overseeing-it",
+                "source": "gsb.stanford.edu",
+                "summary": "In the survey, 75% of directors said they used AI for research and market analysis, 55% for board prep and material summarization. Other common uses included strategic question generation and competitive benchmarking. Matthys says that board members would ideally like to use AI “to track and summarize board packages and more quickly understand year-to-year trends by using LLM tools rather than reading 80- to 100-page reports.” [...] The sooner the better, the researchers suggest. “Moving too slowly with AI governance means you may miss out on opportunities,” Saripalli says. “The board has fiduciary responsibility for anything that has impact at the product or service level.”\n\n“The risk of not moving is as serious as the risk of AI systems running amok,” Matthys adds, noting how past technological shifts have left unprepared companies behind. “If you don’t keep up, there’s a risk that 20 years from now you won’t exist.” [...] ## In Brief\n\n A new survey finds that corporate boards are not keeping up with AI governance.\n Directors report that they are discussing and using AI, yet their boards lack a systematic approach to oversight.\n Companies that wait to define AI strategy and audit their AI use risk being left behind.\n\n“We’re trying to change the wheels on the bus while driving it at 100 miles an hour downhill.”",
+                "score": 0.5627172
+              },
+              {
+                "title": "Chapman Advances Healthcare AI Research and Training | Chapman Newsroom",
+                "url": "https://news.chapman.edu/2026/11/10/chapman-advances-healthcare-ai-research-and-training",
+                "source": "news.chapman.edu",
+                "summary": "Totonchy sees the skepticism around AI in higher education as an opportunity.  \n\n“Generative AI quickly gained a negative reputation because it was seen as a tool for cheating,” she said. “That misses the point. These tools can work alongside humans, handling routine tasks so people can focus on analysis and decision-making. The sooner institutions move past resistance, the sooner AI can support that work.” \n\nSTUDENTS PUT AI TO WORK [...] To address bias in clinical decision-making tools, Wang founded the Healthcare AI Initiative (HAI) at Chapman, bringing together researchers working on pressing healthcare challenges. HAI examines ethical questions surrounding AI, including data privacy, and develops equitable machine learning approaches.  \n\nWang also developed an AI elective within the School of Pharmacy, focused on practical applications for future clinicians. [...] “Every pharmacist has heard the rumors that AI will take pharmacists’ jobs,” Wang said. “But early exposure helps students. As future clinicians, they learn where the real focus should be in relation to AI. That’s something my students learn in this course.”  \n\nWang also works with students on research projects, extending that learning beyond the classroom. Two PharmD students, Elena Wu ’27 and Harvey Duong ’27, have collaborated with her on studies using AI to analyze large datasets.",
+                "score": 0.5269362
+              },
+              {
+                "title": "Gilbert + Tobin rethinks the business of law with AI",
+                "url": "https://openai.com/index/gilbert-tobin-sam-nickless",
+                "source": "openai.com",
+                "summary": "The opportunity is bigger than doing the same work a little more quickly. Used well, AI can raise the quality and volume of what an organisation produces – and give people more time for the complex, strategic work where their expertise and judgement create the greatest value.\n\nFind out more about Gilbert + Tobin’s work with OpenAI through the case studyhere.\n\n## Keep reading\n\nImage 2: Cooley customer story Option A art card\n\nHow Cooley is accelerating IPO work with ChatGPT Sep 17, 2026 [...] Governance should enable responsible use. Our message was simple: AI is not cheating. It is another tool people can use to apply their judgement. They still need to define the task, check the output and take responsibility for the final work.\n\n## You’ve noticed that adoption is unusually high for your firm, with 87% active usage among enabled ChatGPT users, more than twice the rate Gilbert + Tobin typically sees for other tools. How did leadership shape that culture? [...] Gilbert + Tobin began by giving its people room to experiment with AI, then introduced ChatGPT Enterprise, ChatGPT Work and Codex to move from individual assistance to defined, multistep agentic workflows, with people responsible for review and approval.\n\nWe spoke with Sam Nickless, Partner and Chief Executive Officer at Gilbert + Tobin, about leading adoption from the front, where he’s seeing the value of AI, and his advice for other CEOs.",
+                "score": 0.51594
+              },
+              {
+                "title": "CoreWeave targets 2028 profitability as AI demand remains strong | Reuters",
+                "url": "https://www.reuters.com/business/coreweave-beats-quarterly-revenue-estimates-ai-demand-defies-growing-doubts-2026-11-10",
+                "source": "reuters.com",
+                "summary": "The ​steep selloff also triggered a broader crisis of confidence in the AI trade, a ⁠sentiment amplified by the Democrats' sweeping win in the US midterms that has fueled expectations of tighter ​regulation in the data-center build-out.\n\nEarlier in the day, AI juggernaut Anthropic kicked off a roadshow for its share sale ​at a lower target valuation than earlier estimates.",
+                "score": 0.43974733
+              }
+            ]
+          }
+        },
+        {
+          "tool": "format",
+          "args": {
+            "template": "brief",
+            "items": [
+              {
+                "url": "https://progressive.org/latest/the-ai-race-is-putting-patients-at-risk-adirim-20261110",
+                "section": "Y tế & Rủi ro AI",
+                "source": "progressive.org",
+                "title": "The AI Race is Putting Patients at Risk - Progressive.org",
+                "summary": "Cảnh báo về rủi ro khi AI thúc đẩy các mô hình tiên tiến phát triển nhanh, tạo ra nguy cơ liên quan đến mầm bệnh sinh học và nhu cầu thiết lập khung quản trị quốc gia, kiểm soát an ninh quốc gia đối với các công cụ AI."
+              },
+              {
+                "title": "AI Has Entered the Boardroom. Who’s Overseeing It? | Stanford Graduate School of Business",
+                "url": "https://www.gsb.stanford.edu/insights/ai-has-entered-boardroom-whos-overseeing-it",
+                "summary": "Khảo sát mới cho thấy 75% thành viên hội đồng quản trị sử dụng AI cho nghiên cứu, nhưng nhiều công ty vẫn thiếu chiến lược giám sát và quản trị AI mang tính hệ thống.",
+                "source": "gsb.stanford.edu",
+                "section": "Quản trị doanh nghiệp & Hội đồng quản trị"
+              },
+              {
+                "summary": "Đại học Chapman thúc đẩy nghiên cứu và đào tạo AI trong y tế nhằm vượt qua định kiến về gian lận, đồng thời phát triển các cách tiếp cận học máy công bằng và giải quyết vấn đề đạo đức dữ liệu.",
+                "source": "news.chapman.edu",
+                "title": "Chapman Advances Healthcare AI Research and Training | Chapman Newsroom",
+                "url": "https://news.chapman.edu/2026/11/10/chapman-advances-healthcare-ai-research-and-training",
+                "section": "Đào tạo & Y tế"
+              },
+              {
+                "section": "Ứng dụng pháp lý & Doanh nghiệp",
+                "source": "openai.com",
+                "summary": "Hãng luật Gilbert + Tobin đạt tỷ lệ sử dụng ChatGPT Enterprise và các công cụ agentic rất cao (87%), giúp tối ưu hóa quy trình làm việc và chất lượng dịch vụ pháp lý.",
+                "title": "Gilbert + Tobin rethinks the business of law with AI",
+                "url": "https://openai.com/index/gilbert-tobin-sam-nickless"
+              },
+              {
+                "section": "Thị trường & Tài chính AI",
+                "source": "reuters.com",
+                "url": "https://www.reuters.com/business/coreweave-beats-quarterly-revenue-estimates-ai-demand-defies-growing-doubts-2026-11-10",
+                "summary": "CoreWeave đặt mục tiêu có lãi vào năm 2028 nhờ nhu cầu AI duy trì mạnh mẽ, bất chấp những lo ngại về quy định trung tâm dữ liệu mới và định giá của Anthropic trong đợt phát hành cổ phiếu.",
+                "title": "CoreWeave targets 2028 profitability as AI demand remains strong | Reuters"
+              }
+            ]
+          },
+          "result": {
+            "tool": "render_digest",
+            "template": "brief",
+            "markdown": "- Cảnh báo về rủi ro khi AI thúc đẩy các mô hình tiên tiến phát triển nhanh, tạo ra nguy cơ liên quan đến mầm bệnh sinh học và nhu cầu thiết lập khung quản trị quốc gia, kiểm soát an ninh quốc gia đối với các công cụ AI. - [progressive.org](https://progressive.org/latest/the-ai-race-is-putting-patients-at-risk-adirim-20261110)\n- Khảo sát mới cho thấy 75% thành viên hội đồng quản trị sử dụng AI cho nghiên cứu, nhưng nhiều công ty vẫn thiếu chiến lược giám sát và quản trị AI mang tính hệ thống. - [gsb.stanford.edu](https://www.gsb.stanford.edu/insights/ai-has-entered-boardroom-whos-overseeing-it)\n- Đại học Chapman thúc đẩy nghiên cứu và đào tạo AI trong y tế nhằm vượt qua định kiến về gian lận, đồng thời phát triển các cách tiếp cận học máy công bằng và giải quyết vấn đề đạo đức dữ liệu. - [news.chapman.edu](https://news.chapman.edu/2026/11/10/chapman-advances-healthcare-ai-research-and-training)\n- Hãng luật Gilbert + Tobin đạt tỷ lệ sử dụng ChatGPT Enterprise và các công cụ agentic rất cao (87%), giúp tối ưu hóa quy trình làm việc và chất lượng dịch vụ pháp lý. - [openai.com](https://openai.com/index/gilbert-tobin-sam-nickless)\n- CoreWeave đặt mục tiêu có lãi vào năm 2028 nhờ nhu cầu AI duy trì mạnh mẽ, bất chấp những lo ngại về quy định trung tâm dữ liệu mới và định giá của Anthropic trong đợt phát hành cổ phiếu. - [reuters.com](https://www.reuters.com/business/coreweave-beats-quarterly-revenue-estimates-ai-demand-defies-growing-doubts-2026-11-10)",
+            "item_count": 5
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 2,
+      "started_at": "2026-11-11T09:35:46",
+      "user": "Đăng bản tin này lên Telegram giúp mình",
+      "ended_at": "2026-11-11T09:35:46",
+      "status": "waiting_for_user",
+      "assistant_text": "Bạn có chắc chắn muốn đăng bản tin này lên Telegram không?",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": null,
+          "tool_calls": [
+            {
+              "name": "clarify",
+              "args": {
+                "question": "Bạn có chắc chắn muốn đăng bản tin này lên Telegram không?",
+                "response_type": "yes_no",
+                "options": []
+              }
+            }
+          ],
+          "tool_results": [
+            {
+              "tool": "clarify",
+              "args": {
+                "question": "Bạn có chắc chắn muốn đăng bản tin này lên Telegram không?",
+                "response_type": "yes_no",
+                "options": []
+              },
+              "result": {
+                "tool": "ask_user",
+                "question": "Bạn có chắc chắn muốn đăng bản tin này lên Telegram không?",
+                "response_type": "yes_no",
+                "options": [],
+                "awaiting_user": true
+              }
+            }
+          ]
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn có chắc chắn muốn đăng bản tin này lên Telegram không?",
+            "response_type": "yes_no",
+            "options": []
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn có chắc chắn muốn đăng bản tin này lên Telegram không?",
+            "response_type": "yes_no",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 3,
+      "started_at": "2026-11-11T09:36:10",
+      "user": "Có, mình đồng ý, hãy gửi đi",
+      "ended_at": "2026-11-11T09:36:10",
+      "status": "answered",
+      "assistant_text": "Bản tin AI hôm nay đã được đăng thành công lên Telegram theo yêu cầu của bạn!",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": null,
+          "tool_calls": [
+            {
+              "name": "send",
+              "args": {
+                "confirmed": true,
+                "text": "Dưới đây là các tin tức AI nổi bật trong ngày:\n\n- **Cảnh báo rủi ro & Quản trị y tế:** Cuộc đua AI đặt ra nhiều thách thức và rủi ro mới, từ các mô hình tiên tiến có khả năng tạo ra mối đe dọa sinh học cho đến nhu cầu thiết lập khung quản trị quốc gia và kiểm soát an ninh khắt khe hơn.\n- **Quản trị doanh nghiệp:** Khảo sát mới từ Stanford GSB cho thấy 75% thành viên hội đồng quản trị sử dụng AI cho nghiên cứu, nhưng phần lớn các công ty vẫn thiếu chiến lược giám sát và quản trị AI mang tính hệ thống.\n- **Đào tạo & Nghiên cứu ứng dụng:** Đại học Chapman đẩy mạnh nghiên cứu và tích hợp AI vào y tế, giúp sinh viên và giảng viên vượt qua định kiến ban đầu để tập trung vào phân tích dữ liệu và học máy công bằng.\n- **Ứng dụng pháp lý & Doanh nghiệp:** Hãng luật lớn Gilbert + Tobin ghi nhận tỷ lệ áp dụng ChatGPT Enterprise và các quy trình agentic lên tới 87%, giúp nâng cao đáng kể chất lượng và hiệu suất công việc.\n- **Thị trường & Tài chính AI:** CoreWeave đặt mục tiêu đạt lợi nhuận vào năm 2028 nhờ nhu cầu AI tiếp tục duy trì ở mức cao, bất chấp những lo ngại về quy định trung tâm dữ liệu mới và định giá IPO của các công ty trong ngành."
+              }
+            }
+          ],
+          "tool_results": [
+            {
+              "tool": "send",
+              "args": {
+                "confirmed": true,
+                "text": "Dưới đây là các tin tức AI nổi bật trong ngày:\n\n- **Cảnh báo rủi ro & Quản trị y tế:** Cuộc đua AI đặt ra nhiều thách thức và rủi ro mới, từ các mô hình tiên tiến có khả năng tạo ra mối đe dọa sinh học cho đến nhu cầu thiết lập khung quản trị quốc gia và kiểm soát an ninh khắt khe hơn.\n- **Quản trị doanh nghiệp:** Khảo sát mới từ Stanford GSB cho thấy 75% thành viên hội đồng quản trị sử dụng AI cho nghiên cứu, nhưng phần lớn các công ty vẫn thiếu chiến lược giám sát và quản trị AI mang tính hệ thống.\n- **Đào tạo & Nghiên cứu ứng dụng:** Đại học Chapman đẩy mạnh nghiên cứu và tích hợp AI vào y tế, giúp sinh viên và giảng viên vượt qua định kiến ban đầu để tập trung vào phân tích dữ liệu và học máy công bằng.\n- **Ứng dụng pháp lý & Doanh nghiệp:** Hãng luật lớn Gilbert + Tobin ghi nhận tỷ lệ áp dụng ChatGPT Enterprise và các quy trình agentic lên tới 87%, giúp nâng cao đáng kể chất lượng và hiệu suất công việc.\n- **Thị trường & Tài chính AI:** CoreWeave đặt mục tiêu đạt lợi nhuận vào năm 2028 nhờ nhu cầu AI tiếp tục duy trì ở mức cao, bất chấp những lo ngại về quy định trung tâm dữ liệu mới và định giá IPO của các công ty trong ngành."
+              },
+              "result": {
+                "tool": "send_telegram",
+                "status": "sent"
+              }
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "assistant_text": "Bản tin AI hôm nay đã được đăng thành công lên Telegram theo yêu cầu của bạn!",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "send",
+          "args": {
+            "confirmed": true,
+            "text": "Dưới đây là các tin tức AI nổi bật trong ngày:\n\n- **Cảnh báo rủi ro & Quản trị y tế:** Cuộc đua AI đặt ra nhiều thách thức và rủi ro mới, từ các mô hình tiên tiến có khả năng tạo ra mối đe dọa sinh học cho đến nhu cầu thiết lập khung quản trị quốc gia và kiểm soát an ninh khắt khe hơn.\n- **Quản trị doanh nghiệp:** Khảo sát mới từ Stanford GSB cho thấy 75% thành viên hội đồng quản trị sử dụng AI cho nghiên cứu, nhưng phần lớn các công ty vẫn thiếu chiến lược giám sát và quản trị AI mang tính hệ thống.\n- **Đào tạo & Nghiên cứu ứng dụng:** Đại học Chapman đẩy mạnh nghiên cứu và tích hợp AI vào y tế, giúp sinh viên và giảng viên vượt qua định kiến ban đầu để tập trung vào phân tích dữ liệu và học máy công bằng.\n- **Ứng dụng pháp lý & Doanh nghiệp:** Hãng luật lớn Gilbert + Tobin ghi nhận tỷ lệ áp dụng ChatGPT Enterprise và các quy trình agentic lên tới 87%, giúp nâng cao đáng kể chất lượng và hiệu suất công việc.\n- **Thị trường & Tài chính AI:** CoreWeave đặt mục tiêu đạt lợi nhuận vào năm 2028 nhờ nhu cầu AI tiếp tục duy trì ở mức cao, bất chấp những lo ngại về quy định trung tâm dữ liệu mới và định giá IPO của các công ty trong ngành."
+          },
+          "result": {
+            "tool": "send_telegram",
+            "status": "sent"
+          }
+        }
+      ]
+    }
+  ]
+}
