@@ -36,16 +36,18 @@ Kiểm tra tích hợp dùng `main` tại `740cdca`. Các mô tả CP2 trong `to
 
 Tool giữ nguyên query và không theo redirect. Do đó hai URL khác query hoặc qua redirect vẫn có thể cùng trỏ đến một bài. Hai địa chỉ chỉ khác fragment được coi là trùng, kể cả trang dùng fragment để phân biệt nội dung.
 
-`G01_dedupe_research_sources` kiểm tra việc chọn tool trong nhóm eval. Unit test đo code tool có lọc đúng và trả lỗi đúng hay không. Kết quả offline qua ResearchAgent chỉ chứng minh luồng thực thi, còn khả năng model tự định tuyến vẫn chờ CP4 chạy bộ 5 single-turn và 5 multi-turn.
+CP4 đã tích hợp case G01 do CP3 bàn giao và bổ sung G09 để đo ngữ cảnh nhiều lượt. [Run nhóm](../../starter_v0/runs/v3_B_group_gemini_20261110T224831464473.json) đạt 10/10, measured_cases=10 và provider_error_cases=0 trên Gemini gemini-3.5-flash-lite. G01 giữ 2 trong 3 nguồn, G09 giữ 3 trong 4 nguồn; cả hai có duplicate_count=1. Unit test đo logic lọc và nhánh lỗi, còn run nhóm bổ sung bằng chứng model tự chọn và thực thi đúng tool.
 
 ## 4. Bằng chứng
 
 - File/commit/PR: [Tool](../../starter_v0/tools/dedupe_sources/tool.py), [contract](../../starter_v0/tools/dedupe_sources/TOOL.md), [unit test](../../starter_v0/tests/test_tools_todo.py), [case nhóm](../../starter_v0/data/eval_group.json) và [kết quả B5a](group_report.md#b5a-required-evidence--tool-mới-unit-test-ui).
+- Commit đưa CP3 vào main: [515b40f](https://github.com/congnt180263/K5-L3B-DAY03-E3-ResearchAgentToolEval/commit/515b40fd9de1aaba9eb4a733e45de0fef412ad92).
 - Commit triển khai CP3 đã push trên nhánh cá nhân: [b66657a](https://github.com/congnt180263/K5-L3B-DAY03-E3-ResearchAgentToolEval/commit/b66657a6ac9f11aa5a73b079d27d3a06799369b4).
+- Rà soát đồng bộ báo cáo nhóm và metadata version log bằng các run JSON đã lưu. Các mục còn thiếu bằng chứng runtime được ghi rõ trong phần chờ kiểm chứng của báo cáo nhóm.
 - AI/công cụ đã dùng và cách tự kiểm tra kết quả: Codex hỗ trợ triển khai, viết test và soạn báo cáo. Đối chiếu ví dụ trong TOOL.md với các assert đầu ra, kiểm tra đăng ký và chạy lại `python -m pytest -v` từ `starter_v0`.
 
 ## 5. Tự đánh giá
 
 Phần triển khai CP3 đạt mục tiêu loại URL trùng mà vẫn giữ dữ liệu và thứ tự của các nguồn được chọn. Ba unit test đều PASS, gồm một trường hợp loại trùng và hai trường hợp lỗi đầu vào. Kiểm tra offline qua ResearchAgent xác nhận lời gọi đi qua registry và trả đúng kết quả cho ví dụ ba nguồn.
 
-Giới hạn cần lưu ý là tool chỉ so sánh URL theo các quy tắc đã công bố. Hai URL khác query hoặc qua redirect vẫn có thể trỏ tới cùng nội dung. Các kiểm tra offline xác nhận code xử lý đúng lời gọi. Bước cần kiểm chứng tiếp theo là model có tự chọn `dedupe_sources` và truyền đủ danh sách nguồn trong eval nhóm CP4 hay không.
+Giới hạn cần lưu ý là tool chỉ so sánh URL theo các quy tắc đã công bố. Hai URL khác query hoặc qua redirect vẫn có thể trỏ tới cùng nội dung. Các kiểm tra offline xác nhận logic xử lý và nhánh lỗi. Hai case G01/G09 trong run nhóm bổ sung bằng chứng định tuyến thành công trên Gemini. Phạm vi này chưa đo các URL redirect, nguồn có query khác nhau nhưng cùng nội dung hoặc trang phân biệt nội dung bằng fragment.

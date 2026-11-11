@@ -11,7 +11,7 @@
 ## 2. Phần việc phụ trách
 
 - **CP2 — Tối ưu prompt và tool declaration v1–v3:** Quản lý `artifacts/system_prompt.md`, `artifacts/tools.yaml` và `artifacts/version_log.csv`. Thiết kế các giả thuyết cải tiến theo chu trình kiểm chứng khoa học, chạy base eval kiểm nghiệm qua từng vòng v0 → v1 → v2 → v3, đưa độ chính xác từ 0.65 lên 1.00 (20/20 test cases pass).
-- **CP5 — UI, live chat và báo cáo:** Xây dựng giao diện web người dùng bằng Streamlit (`starter_v0/app.py`), thực hiện phiên tương tác trực tiếp (live chat) với agent để thu thập transcript chứng minh rào chắn an toàn, và chủ trì biên soạn nội dung Báo cáo nhóm (`group_report.md`).
+- **CP5 — UI, live chat và báo cáo:** Xây dựng giao diện web người dùng bằng Streamlit (`starter_v0/app.py`), thực hiện phiên tương tác trực tiếp (live chat) với agent để thu thập transcript quan sát hành vi hỏi xác nhận, và chủ trì biên soạn nội dung Báo cáo nhóm (`group_report.md`).
 
 ## 3. Đóng góp cụ thể
 
@@ -29,15 +29,16 @@
 
 ### Xây dựng UI, Live Chat và Báo cáo (CP5)
 - **Phát triển giao diện UI (`starter_v0/app.py`):** Xây dựng ứng dụng web tương tác bằng Streamlit:
-  - Thiết kế luồng xử lý agent đa vòng (tối đa 4 vòng gọi tool cho mỗi lượt người dùng).
+  - Thiết kế luồng xử lý agent đa vòng, mặc định 4 vòng gọi tool mỗi lượt và cho phép chọn từ 1 đến 8 vòng trong sidebar.
   - Hiển thị trực quan từng bước gọi tool, tham số và kết quả phản hồi trung gian của tool.
-  - Tích hợp các câu hỏi mẫu (quick prompts) theo đúng danh mục mục A3 của group report để người ngoài nhóm dễ dàng dùng thử.
+  - Liệt kê câu hỏi mẫu trong A3 của báo cáo nhóm để người ngoài dùng thử qua ô nhập chat của UI.
   - Tích hợp cơ chế tự động ghi và xuất transcript JSON theo đúng cấu trúc tiêu chuẩn của bài lab.
-- **Thực hiện phiên Live Chat thực tế:** Chạy phiên tương tác 4 lượt trực tiếp trên giao diện UI (`starter_v0/transcripts/ui_session_20261110T195845233289.transcript.json`), xác minh đầy đủ:
+- **Thực hiện phiên Live Chat thực tế:** Chạy phiên tương tác 4 lượt trực tiếp trên giao diện UI (`starter_v0/transcripts/ui_session_20261110T195845233289.transcript.json`), ghi nhận các hành vi sau:
   - Turn 1: Tra cứu tin tức AI hôm nay và tự động format thành bản tin chuyên mục.
   - Turn 2: Lấy tweet mới nhất của Elon Musk (tự động map tên sang handle).
   - Turn 3: Người dùng yêu cầu đăng Telegram → Agent kích hoạt guardrail, gọi `clarify(response_type="yes_no")` xin xác nhận.
-  - Turn 4: Người dùng đồng ý → Agent gọi `send(confirmed=true)` kèm nội dung bản tin.
+  - Turn 4: Người dùng đồng ý → Agent gọi `send(confirmed=true)` kèm nội dung bản tin; tool trả RuntimeError do thiếu cấu hình Telegram.
+  - C6 còn thiếu phiên thiếu thông tin nghiên cứu rồi người dùng bổ sung, cùng link UI đang hoạt động. Các mục này chờ bằng chứng thật.
 - **Biên soạn Báo cáo nhóm (`group_report.md`):**
   - Trình bày Phần A (giới thiệu agent, danh mục tool, câu hỏi mẫu).
   - Lập bảng bằng chứng version B1, phân tích lỗi baseline B2, bằng chứng live chat B4, bảng nghiệm thu B5a.
@@ -60,7 +61,7 @@
 
 ## 5. Tự đánh giá
 
-- Hoàn thành đầy đủ và đạt kết quả cao ở cả hai mảng phụ trách: CP2 (vòng lặp tối ưu đưa model từ 0.65 lên 1.00) và CP5 (xây dựng thành công web UI và live chat session đáp ứng đầy đủ tiêu chí an toàn).
-- Quá trình tối ưu v0 → v3 tuân thủ đúng phương pháp luận nghiên cứu: mỗi version thay đổi đúng một giả thuyết, có bảng so sánh trước/sau minh bạch và đầy đủ log hợp lệ.
+- CP2 có các run hợp lệ đạt 0.65 → 0.80 → 0.90 → 1.00. CP5 có code UI và transcript bốn lượt, còn chờ kịch bản thiếu thông tin rồi bổ sung và link UI để hoàn tất C6.
+- Các vòng có log và bảng so sánh trước/sau. V3 cùng sửa boundary và carryover; run hiện tại đo tác động chung, nên chưa tách được đóng góp của từng sửa đổi theo yêu cầu một giả thuyết mỗi vòng.
 - Giao diện UI trực quan, hoạt động ổn định và phục vụ tốt việc kiểm thử thực tế.
 - Báo cáo nhóm và cá nhân được hoàn thiện đúng quy chuẩn, gắn liền với các bằng chứng kỹ thuật có thể kiểm chứng được trong repo.

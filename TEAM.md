@@ -12,7 +12,7 @@
 | STT | Họ tên | MSSV | Email | GitHub | Vai trò |
 | --: | ------ | ---- | ----- | ------ | ------- |
 |   1 | Nguyễn Thành Công | 2A202603789 | congc3c1@gmail.com | congnt180263 | Quản lý System Prompt, Tool Declaration & Vòng lặp tối ưu v0 -> v3. Xây dựng UI, live chat và báo cáo |
-|   2 | Mai Xuân Khang | 2A202603722 | maixkhang2004@gmail.com | KhangMai123 | CP3 — New Tool & Unit Tests |
+|   2 | Mai Xuân Khang | 2A202603722 | 26ai.khangmx@vinuni.edu.vn | KhangMai123 | CP3 — New Tool & Unit Tests |
 |   3 | Đồng Văn Quyến | 2A202603769 | 26ai.quyendv2@vinuni.edu.vn | dvquyen2609 | CP1 — Setup & Baseline v0, CP4 — Eval nhóm 10 case |
 ## Cá nhân
 

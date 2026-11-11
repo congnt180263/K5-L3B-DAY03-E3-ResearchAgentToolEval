@@ -28,7 +28,7 @@
 
 ### 3.2. Thiết kế và đánh giá bộ Test Cases nhóm (CP4)
 
-- **Xây dựng bộ dữ liệu `data/eval_group.json`:** Thiết kế đủ 10 case (5 single-turn `query` + 5 multi-turn `turns`) nhằm đo lường các biên hành vi mà bộ base chưa phủ:
+- **Xây dựng bộ dữ liệu `data/eval_group.json`:** Tích hợp case G01 do CP3 bàn giao và bổ sung các case còn lại thành bộ 10 case (5 single-turn `query` + 5 multi-turn `turns`) để đo các biên hành vi mà bộ base chưa phủ:
   1. `G01_dedupe_research_sources` (single-turn, `wrong_tool`): Kiểm tra định tuyến tới tool mới `dedupe_sources` khi người dùng đã cung cấp sẵn danh sách URL nguồn cần loại trùng.
   2. `G02_handle_with_at_sign` (single-turn, `wrong_arg_value`): Kiểm tra tiền xử lý loại bỏ ký tự `@` khi người dùng nhập `@karpathy`, trích xuất chính xác `screenname="karpathy"` và `limit=4`.
   3. `G03_timeframe_month` (single-turn, `wrong_arg_value`): Mở rộng phạm vi thời gian sang `timeframe="month"` (base chỉ phủ day và week).
@@ -58,7 +58,7 @@
 - **Nội dung Báo cáo nhóm:**
   - Bảng B2 — Failure Analysis: [`report/team/group_report.md#b2-failure-analysis`](group_report.md#b2-failure-analysis).
   - Bảng B3 — Team Eval Cases: [`report/team/group_report.md#b3-team-eval-cases`](group_report.md#b3-team-eval-cases).
-- **Công cụ hỗ trợ:** Antigravity (Gemini) hỗ trợ rà soát schema test case và kiểm tra tuân thủ rubric.
+- **Công cụ hỗ trợ:** Antigravity (Gemini) hỗ trợ rà soát schema test case và kiểm tra tuân thủ rubric. Tự kiểm tra bằng cách đối chiếu ID và số lượng single/multi-turn trong eval_group.json với results trong run nhóm, kiểm tra measured_cases=total_cases=10 và provider_error_cases=0.
 
 ## 5. Tự đánh giá
 

@@ -29,7 +29,7 @@ streamlit run app.py
 
 > Dán link public để team khác mở thử ngay qua Cloudflare Tunnel:
 >
-> URL: `https://trycloudflare.com` (chạy qua `cloudflared tunnel --url http://localhost:8501`)
+> Chưa có URL phiên UI được lưu trong repo để người ngoài dùng thử. Người phụ trách CP5 cần bổ sung địa chỉ đang hoạt động và xác minh các câu hỏi mẫu A3. Model sử dụng là Gemini `gemini-3.5-flash-lite`.
 
 ### A2. Tool agent có
 
@@ -73,10 +73,10 @@ Lấy từ `starter_v0/artifacts/version_log.csv` và `starter_v0/runs/*.json`. 
 
 | Version | Changed Artifact | Hypothesis | Metric Before | Metric After | Run File |
 |---|---|---|---:|---:|---|
-| v0 | baseline | Chạy baseline ban đầu với starter prompt và tool declarations | 0.00 | 0.65 | v0_B_base_gemini_20261110T180435443105.json |
-| v1 | artifacts/system_prompt.md | Bỏ chỉ dẫn xấu (đoán mò, ép 1 tool), bắt buộc clarify khi thiếu thông tin hoặc trước khi send | 0.65 | 0.80 | v1_B_base_gemini_20261110T185456303987.json |
-| v2 | artifacts/tools.yaml | Viết lại description (when/when not to use) và quy ước query/handle trong tools.yaml | 0.80 | 0.90 | v2_B_base_gemini_20261110T191935420647.json |
-| v3 | artifacts/system_prompt.md | Quy định chặt chẽ response_type='yes_no' cho clarify khi hỏi xác nhận gửi tin và duy trì ngữ cảnh multi-turn (không lặp lại clarify khi đã đủ thông tin) | 0.90 | 1.00 | v3_B_base_gemini_20261110T192653298089.json |
+| v0 | baseline | Chạy baseline ban đầu với starter prompt và tool declarations | — | 0.65 | [v0_B_base_gemini_20261110T180435443105.json](../../starter_v0/runs/v0_B_base_gemini_20261110T180435443105.json) |
+| v1 | artifacts/system_prompt.md | Bỏ chỉ dẫn xấu (đoán mò, ép 1 tool), bắt buộc clarify khi thiếu thông tin hoặc trước khi send | 0.65 | 0.80 | [v1_B_base_gemini_20261110T185456303987.json](../../starter_v0/runs/v1_B_base_gemini_20261110T185456303987.json) |
+| v2 | artifacts/tools.yaml | Viết lại description (when/when not to use) và quy ước query/handle trong tools.yaml | 0.80 | 0.90 | [v2_B_base_gemini_20261110T191935420647.json](../../starter_v0/runs/v2_B_base_gemini_20261110T191935420647.json) |
+| v3 | artifacts/system_prompt.md | Quy định chặt chẽ response_type='yes_no' cho clarify khi hỏi xác nhận gửi tin và duy trì ngữ cảnh multi-turn (không lặp lại clarify khi đã đủ thông tin) | 0.90 | 1.00 | [v3_B_base_gemini_20261110T192653298089.json](../../starter_v0/runs/v3_B_base_gemini_20261110T192653298089.json) |
 
 ### B2. Failure Analysis
 
@@ -124,9 +124,9 @@ Lấy từ [`starter_v0/transcripts/ui_session_20261110T195845233289.transcript.
 | 1 | `Tin tức AI hôm nay có gì nổi bật?` | `lookup(topic="news", timeframe="day", query="AI")` → `format(template="sections", headline="Tin tức AI nổi bật hôm nay", ...)` | v3 | **PASS**: Tra cứu đúng tin tức web trong ngày, tự động format thành bản tin 5 mục có tiêu đề, link và tóm tắt theo từng chủ đề (Y tế, An toàn, An ninh, Cuộc đua AI, Game). |
 | 2 | `Lấy 5 tweet mới nhất của Elon Musk` | `timeline(screenname="elonmusk", limit=5)` → `format(template="sections", ...)` | v3 | **PASS**: Tự động chuyển đổi tên Elon Musk → `screenname="elonmusk"`, trích đúng `limit=5`, sau đó format kết quả bài đăng gọn gàng. |
 | 3 | `Đăng bản tin này lên Telegram giúp mình` | `clarify(response_type="yes_no", question="Bạn có chắc chắn muốn đăng bản tin này lên Telegram không?")` | v3 | **PASS (Guardrail kích hoạt)**: Agent KHÔNG tự ý gọi `send` ngay mà kích hoạt rào chắn an toàn, hỏi xác nhận với kiểu phản hồi `yes_no`. |
-| 4 | `Có hãy đăng bản tin này` | `send(confirmed=true, text="...")` | v3 | **PASS (Thực thi sau xác nhận)**: Người dùng xác nhận đồng ý, agent gọi `send` với `confirmed=true` kèm toàn bộ nội dung bản tin đã tổng hợp ở Turn 1. |
+| 4 | `Có hãy đăng bản tin này` | `send(confirmed=true, text="...")` | v3 | Model gọi gửi sau xác nhận. Tool trả `RuntimeError` vì thiếu `TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID`; transcript này không ghi nhận gửi thành công. |
 
-Phiên live chat bao phủ trọn vẹn 3 yêu cầu bắt buộc của Rubric C6: (1) Yêu cầu thông thường (tin tức/tweet), (2) Rào chắn an toàn khi yêu cầu gửi/đăng (hỏi lại bằng `clarify`), và (3) Xử lý xác nhận thành công sau khi được người dùng cho phép.
+Phiên live chat đã có yêu cầu research thường, hỏi xác nhận gửi và lời gọi send sau khi đồng ý. C6 còn thiếu kịch bản người dùng đưa thiếu thông tin nghiên cứu rồi bổ sung ở lượt sau. Người phụ trách CP5 cần chạy và lưu transcript thật cho kịch bản này. Run nhóm G06 có kết quả sent ở B3 là bằng chứng riêng, không thay thế kịch bản live còn thiếu.
 
 ### B5a. Required Evidence — Tool mới, unit test, UI
 
@@ -134,7 +134,7 @@ Phiên live chat bao phủ trọn vẹn 3 yêu cầu bắt buộc của Rubric C
 |---|---|---|---|
 | Tool mới (`dedupe_sources`) | [Mã nguồn](../../starter_v0/tools/dedupe_sources/tool.py), [contract](../../starter_v0/tools/dedupe_sources/TOOL.md) | Giữ bản đầu tiên, metadata và thứ tự. Kiểm tra offline qua ResearchAgent giữ 2 trong 3 nguồn và đếm 1 nguồn trùng. | Không dùng mạng hoặc ghi file. URL sai trả lỗi chỉ rõ vị trí mục. Giữ query, bỏ fragment khi so sánh và không theo redirect. |
 | Unit test tool mới (≥ 3 test/tool) | [Ba test CP3](../../starter_v0/tests/test_tools_todo.py), [contract test](../../starter_v0/tests/test_tool_contract.py) | 3 test CP3 PASS, 0 FAIL, 0 SKIP. Contract 60 PASS. Toàn suite 70 PASS, 0 FAIL, 14 SKIP. | 14 skip là stub tool gốc. Test chạy offline qua registry. |
-| UI (lệnh chạy + link dùng thử) | [app.py](../../starter_v0/app.py), [transcript](../../starter_v0/transcripts/ui_session_20261110T195845233289.transcript.json) | Giao diện Streamlit chat tương tác trực quan, hỗ trợ gọi tool đa vòng (multi-round tool calls), hiển thị kết quả trung gian rõ ràng và export session transcript JSON đầy đủ; phiên live test 4 lượt đạt 100% mục tiêu rubric. | Cần cài đặt thư viện Streamlit (`pip install -r requirements.txt`) và cấu hình API key trong `.env`. Rào chắn guardrail hoạt động chặt chẽ: bắt buộc hỏi xác nhận yes/no trước khi gọi `send`. |
+| UI (lệnh chạy + link dùng thử) | [app.py](../../starter_v0/app.py), [transcript](../../starter_v0/transcripts/ui_session_20261110T195845233289.transcript.json) | Giao diện Streamlit chat tương tác trực quan, hỗ trợ gọi tool đa vòng (multi-round tool calls), hiển thị kết quả trung gian rõ ràng và export session transcript JSON đầy đủ; đã lưu phiên live test 4 lượt; kịch bản thiếu thông tin rồi bổ sung còn chờ bằng chứng. | Cần cài đặt thư viện Streamlit (`pip install -r requirements.txt`) và cấu hình API key trong `.env`. Transcript ghi nhận clarify dạng yes/no trước send. Lượt send trả lỗi thiếu cấu hình Telegram. Link UI đang hoạt động và kịch bản thiếu thông tin còn chờ người phụ trách CP5 bổ sung. |
 
 Ba test kiểm tra loại trùng và bảo toàn đầu vào, từ chối `items` sai kiểu, và trả error dict khi mục thứ hai có cổng `99999`. Eval định tuyến có thể chấm đúng tên tool dù dữ liệu đầu ra sai hoặc xử lý URL lỗi bị gián đoạn. Unit test kiểm tra cả đầu ra và nhánh lỗi.
 
@@ -147,7 +147,7 @@ python -m pytest -v                              70 passed, 14 skipped
 Offline Agent dispatch                          PASS (3 input, 2 kept, 1 duplicate)
 ```
 
-Kiểm tra ResearchAgent dùng provider thử offline với lời gọi dựng sẵn. Case `G01_dedupe_research_sources` đã có trong bộ nhóm và chờ CP4 chạy với model thật. Số đo CP2 v0–v3 ở B1 thuộc các run đã lưu trước khi thêm tool.
+Kiểm tra ResearchAgent dùng provider thử offline với lời gọi dựng sẵn. CP4 đã chạy [suite group](../../starter_v0/runs/v3_B_group_gemini_20261110T224831464473.json) trên Gemini và đạt 10/10, gồm G01/G09 dùng dedupe_sources với đầu ra loại trùng đúng. Số đo CP2 v0–v3 ở B1 thuộc các run đã lưu trước khi thêm tool.
 
 ### B5. Bonus Evidence
 
@@ -164,30 +164,29 @@ Test challenge: số bug tìm được trong tool có sẵn (nếu có), cách s
 
 ### B7. Small Local Model Challenge (bonus)
 
-| Version | Model (provider) | Prompt/Tools | case_accuracy | tool_routing | argument | multiturn | Run File |
-|---|---|---|---|---|---|---|---|
-| v3 | gemini-2.5-flash-lite (cloud) | v3 / v3 | 1.00 | 1.00 | 1.00 | 1.00 | v3_B_base_gemini_20261110T192653298109.json |
-| v3-qwen7b | qwen2.5:7b (ollama) | v3 / v3 | 0.85 | 0.85 | 0.85 | 1.00 | v3-qwen7b_B_base_ollama_20261111T004051198133.json |
-| v3-llama3b | llama3.2:3b (ollama) | v3 / v3 | 0.35 | 0.50 | 0.35 | 0.33 | v3-llama3b_B_base_ollama_20261111T004334504740.json |
-| v4-local | qwen2.5:7b + llama3.2:3b (ollama) | system_prompt_local.md / tools.yaml(cloud) | TBD | TBD | TBD | TBD | TBD (xem ghi chú) |
-| v5-local | qwen2.5:7b + llama3.2:3b (ollama) | system_prompt_local.md / tools_local.yaml | TBD | TBD | TBD | TBD | TBD (xem ghi chú) |
+| Version | Model (provider) | case_accuracy | tool_routing | argument | multiturn | Run File |
+|---|---|---|---|---|---|---|
+| v3 | gemini-3.5-flash-lite (cloud) | 1.00 | 1.00 | 1.00 | 1.00 | [Run cloud v3](../../starter_v0/runs/v3_B_base_gemini_20261110T192653298089.json) |
+| v3-qwen7b | qwen2.5:7b (ollama) | 0.85 | 0.85 | 0.85 | 1.00 | [Run Qwen](../../starter_v0/runs/v3-qwen7b_B_base_ollama_20261111T004051198133.json) |
+| v3-llama3b | llama3.2:3b (ollama) | 0.35 | 0.50 | 0.35 | 0.3333 | [Run Llama](../../starter_v0/runs/v3-llama3b_B_base_ollama_20261111T004334504740.json) |
 
-> **Ghi chú v4/v5:** Các artifact tối ưu đã được tạo tại `starter_v0/artifacts/system_prompt_local.md` và `starter_v0/artifacts/tools_local.yaml`. Do hạn chế tài nguyên máy tính cục bộ (RAM/VRAM), các run v4-local và v5-local chưa hoàn thành trong thời hạn nộp bài; kết quả TBD sẽ được cập nhật sau khi chạy.
+Cả hai run local đo 20/20 case và không lỗi provider. JSON ghi prompt hash bắt đầu `8754f1c42736` và tools hash `3eba49829063`, trong khi run cloud v3 ghi `92f5173e942e` và `ce42364c4572`. Vì artifact có hash khác nhau, bảng trên mô tả các run đã lưu, chưa chứng minh phép so sánh cùng byte prompt/tools giữa cloud và local. Version log dùng đúng hash của từng JSON.
 
-Lỗi đặc thù của model nhỏ (đếm từ run JSON):
+| Quan sát trong các run local | Qwen 7B | Llama 3B |
+|---|---|---|
+| FAIL tổng cộng | 3/20 | 13/20 |
+| Thiếu clarify ở R10/R11/R12 | 3 case | 3 case |
+| Dùng sai tool khi cần fetch | 0 | R04, M04 |
+| Sai kiểu limit | 0 | R05, chuỗi "10" thay cho số 10 |
+| Gọi tool ngoài phạm vi | 0 | R08, R14 |
+| Hỏi lại dù đã có handle | 0 | M01, M03 |
+| Lỗi thực thi tool ghi trong JSON | 0 | R11 HTTPError; R14 AttributeError |
 
-| Failure Pattern | Llama3b Count | Qwen7b Count | Example Case | Fix Tried (v4/v5) | Helped? |
-|---|---|---|---|---|---|
-| Missed `clarify` — trả lời text thay vì gọi tool | 4 | 2 | R10, R11, R12 | Few-shot examples + CRITICAL RULES tiếng Anh rõ | TBD |
-| Wrong tool (lookup thay vì fetch khi có URL cụ thể) | 2 | 0 | R04, M04 | Rule 4: "If user provides URL → use `fetch`" | TBD |
-| Out-of-scope gọi tool thừa (toán, code) | 2 | 0 | R08, R14 | Rule 3: OUT OF SCOPE → respond, no tool | TBD |
-| Sai kiểu dữ liệu (`limit="10"` thay vì `10`) | 1 | 0 | R05 | tools_local.yaml: ghi rõ `type: integer` | TBD |
-| Sai tool (social_search thay vì lookup carryover) | 1 | 0 | M02 | Few-shot: carryover timeframe example | TBD |
-| Multi-turn confusion (clarify thay vì timeline) | 2 | 0 | M01, M03 | Few-shot: "already gave URL/handle → use it" | TBD |
+Các artifact `system_prompt_local.md` và `tools_local.yaml` là phương án tối ưu đã soạn. Chưa có run v4-local, v5-local hoặc lượt kiểm tra ngược trên cloud. Các kế hoạch này được giữ trong báo cáo và chưa ghi metric vào version log.
 
-- **Cái gì giúp model nhỏ gọi tool đúng hơn nhất?** Few-shot examples bằng tiếng Anh cho từng tình huống cụ thể (đặc biệt pattern `clarify` khi thiếu info, `no-tool` khi out-of-scope). Qwen 7B đạt 0.85 với prompt cloud v3; Llama 3B cần thêm chỉ dẫn integer type và phân biệt fetch/lookup rõ ràng hơn. Bằng chứng: v3-qwen7b 17/20 PASS vs v3-llama3b chỉ 7/20 (0.35).
-- **Bản prompt tối ưu cho local chạy trên model cloud?** Cần chạy kiểm chứng v5-local trên Gemini. Dự kiến điểm Gemini giảm nhẹ do bỏ tiếng Việt và bỏ mô tả chi tiết trong tools, nhưng vẫn ≥ 0.90 do quy tắc rõ ràng hơn.
-- **Khi nào chọn model local?** Khi dữ liệu nhạy cảm không rời máy, khi không có quota API, hoặc khi task đơn giản (single-turn routing) trên Qwen 7B là đủ. Với multi-turn phức tạp hoặc boundary an toàn nghiêm ngặt, model cloud vẫn vượt trội rõ rệt.
+- Chưa có kết quả trước/sau để kết luận few-shot hay đổi description giúp model local cải thiện.
+- Chưa có kết quả để kết luận prompt local chạy trên cloud đạt mức điểm nào.
+- Bonus Small Local Model chưa đủ bằng chứng theo README Step 7 và RUBRIC. Hai vòng tối ưu và phép kiểm tra ngược còn chờ người phụ trách thực hiện.
 
 ## 5. Khó khăn và cách xử lý
 
@@ -211,6 +210,8 @@ Lỗi đặc thù của model nhỏ (đếm từ run JSON):
 
 Chi tiết đóng góp của từng thành viên nằm trong [TEAM.md](../../TEAM.md) và các báo cáo cá nhân `report/team/MSSV_HoTen.md`.
 
+Khang rà soát và đồng bộ đường dẫn run, hash artifact và các nhận xét trong báo cáo với hỗ trợ của Codex. Các số liệu được lấy từ JSON đã lưu; những mục chưa có phiên chạy thật được ghi ở phần chờ kiểm chứng.
+
 ## 7. Hạn chế và hướng cải thiện — B6. Reflection
 
 - **Fix nào thuộc `system_prompt.md`?**
@@ -222,6 +223,13 @@ Chi tiết đóng góp của từng thành viên nằm trong [TEAM.md](../../TEA
   - Nội dung câu hỏi trong `clarify`: Chấm tự động kiểm tra xem `clarify` có được gọi với đúng `response_type` hay không, nhưng chất lượng và sự tự nhiên của câu hỏi (`question`) gửi tới người dùng cần sự đánh giá của con người.
 - **Nếu có thêm một vòng, nhóm sẽ thử giả thuyết nào?**
   - Thử nghiệm tích hợp bộ nhớ tóm tắt động (dynamic memory) và cơ chế tự sửa sai (self-correction/reflection step): nếu một tool trả về kết quả rỗng hoặc lỗi API (ví dụ 404 hoặc không tìm thấy tweet), agent có thể tự động đổi từ khóa tìm kiếm hoặc chuyển sang công cụ thay thế (như fallback từ social_search sang lookup) mà không cần người dùng nhắc nhở.
+
+### Các mục chờ kiểm chứng trước khi chốt bài
+
+- CP5 cần link UI đang hoạt động và transcript thật gồm thiếu thông tin rồi người dùng bổ sung.
+- C2 còn cần người phụ trách bổ sung rõ khi nào không dùng cho format, policy và paper_text. Các thay đổi ảnh hưởng đầu vào model cần được đo và ghi version riêng.
+- V3 đã thay đổi cả boundary xác nhận và carryover đa lượt. Với tiêu chí một giả thuyết mỗi vòng ở C3, bằng chứng hiện tại đo tác động chung của hai sửa đổi. Chưa có run riêng để tách tác động từng sửa đổi.
+- Các run và transcript gốc được giữ nguyên. Mọi kết luận kết quả phải dựa vào chúng.
 
 ## 8. Tài liệu tham khảo
 
