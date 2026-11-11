@@ -53,15 +53,28 @@ Sao chép mục dưới đây cho từng thành viên.
 
 ### Phần việc phụ trách
 
-- CP3 — Tool mới, hợp đồng và unit test offline.
+- **CP3 — Tool mới và unit test:** Thiết kế, triển khai tool offline `dedupe_sources` để loại nguồn nghiên cứu trùng URL; viết hợp đồng `TOOL.md`, đăng ký trong `tools/__init__.py` và bổ sung declaration vào `artifacts/tools.yaml`.
+- Viết ba unit test cho tool mới, kiểm tra contract và khả năng thực thi qua `ResearchAgent`; tổng hợp bằng chứng CP3 trong bảng B5a và báo cáo cá nhân.
+- Chuẩn bị case định tuyến G01 để bàn giao cho CP4, phối hợp đối chiếu kết quả G01/G09 trong run nhóm và rà soát tính nhất quán của báo cáo, version log.
 
 ### Đóng góp cụ thể
 
-- Bổ sung `dedupe_sources`, đăng ký tool và viết ba unit test. Thêm một case định tuyến để bàn giao cho CP4.
+- **Thiết kế và triển khai tool `dedupe_sources` (CP3).** Rà soát các tool có sẵn và bổ sung bước lọc nguồn trùng cho danh sách đã thu thập trước khi tổng hợp hoặc trích dẫn. Tool nhận danh sách đối tượng JSON chứa URL HTTP(S) tuyệt đối, trả các mục được giữ và số nguồn trùng `duplicate_count`. Khi so sánh, tool chuẩn hóa host, cổng mặc định và fragment; giữ nguyên URL, metadata của bản xuất hiện đầu tiên cùng thứ tự tương đối của các nguồn. Tool chạy bằng Python standard library, không cần API key, không gọi mạng và không ghi file.
+- **Xây dựng hợp đồng và đăng ký tool.** Hoàn thiện `tools/dedupe_sources/TOOL.md` với frontmatter, mục đích, điều kiện sử dụng, tham số, ví dụ input/output và giới hạn. Import hàm, đăng ký đúng tên trong `TOOL_FUNCTIONS` và thêm JSON Schema vào `tools.yaml`. Phần tích hợp trên nền CP2 v3 giữ các khai báo tool cũ và cho phép Agent thực thi tool mới qua registry có sẵn.
+- **Kiểm tra dữ liệu đầu vào và xử lý lỗi.** Kiểm tra kiểu danh sách, dữ liệu JSON, trường URL và cổng HTTP(S). Trường hợp sai dữ liệu trả error dict với `tool`, `error` và `message`. Nếu lỗi xuất hiện sau một mục hợp lệ, tool trả lỗi thay vì trả danh sách lọc dở dang. Giới hạn được ghi rõ gồm giữ nguyên query, không theo redirect và coi các URL chỉ khác fragment là cùng nguồn.
+- **Viết ba unit test thực tế.** Thay ba stub dành cho tool mới trong `tests/test_tools_todo.py` bằng test chạy qua registry. Happy path kiểm tra loại URL trùng, giữ bản đầu tiên và thứ tự, bảo toàn đầu vào và giữ nguồn có query khác. Test sai kiểu kiểm tra chuỗi thay cho danh sách trả `TypeError` dạng dict. Test nhánh lỗi kiểm tra URL thứ hai có cổng `99999` trả `ValueError` đúng vị trí, không làm crash lời gọi.
+- **Thực hiện kiểm thử và nghiệm thu CP3.** Contract tests đạt 60 PASS. Ba test mới đạt 3 PASS, 0 FAIL, 0 SKIP. Toàn suite đạt 70 PASS, 0 FAIL và 14 SKIP ở các stub tool cũ. Kiểm tra offline qua `ResearchAgent` với provider thử xác nhận lời gọi `dedupe_sources` đi qua registry, nhận 3 nguồn, giữ 2 và đếm 1 nguồn trùng.
+- **Phối hợp tích hợp vào CP4.** Chuẩn bị case single-turn `G01_dedupe_research_sources` và bàn giao để thành viên phụ trách CP4 tích hợp vào bộ 10 case. Đối chiếu run nhóm `v3_B_group_gemini_20261110T224831464473.json` trên Gemini `gemini-3.5-flash-lite`, đo đủ 10/10 case và không lỗi provider. G01 giữ 2 trong 3 nguồn; G09 do CP4 bổ sung giữ 3 trong 4 nguồn. Hai case đều PASS và có `duplicate_count=1`.
+- **Hoàn thiện báo cáo và bằng chứng đóng góp.** Viết báo cáo cá nhân đúng mẫu, bổ sung danh mục tool ở A2, mô tả giải pháp và bảng B5a trong báo cáo nhóm. Tích hợp CP3 lên nền `main` có CP2 v3, đối chiếu đường dẫn run, hash artifact và kết quả thực tế để đồng bộ version log cùng các nhận xét báo cáo. Nội dung còn thiếu phiên chạy được ghi rõ trạng thái chờ kiểm chứng.
 
 ### Bằng chứng
 
-- [Báo cáo CP3](report/team/2A202603722_MaiXuanKhang.md) và [kết quả kiểm thử](report/team/group_report.md#b5a-required-evidence--tool-mới-unit-test-ui).
+- [Báo cáo cá nhân CP3](report/team/2A202603722_MaiXuanKhang.md) và [bảng B5a trong báo cáo nhóm](report/team/group_report.md#b5a-required-evidence--tool-mới-unit-test-ui).
+- Mã nguồn và hợp đồng tool mới [tool.py](starter_v0/tools/dedupe_sources/tool.py), [TOOL.md](starter_v0/tools/dedupe_sources/TOOL.md).
+- Khai báo và đăng ký [tools.yaml](starter_v0/artifacts/tools.yaml), [tools/__init__.py](starter_v0/tools/__init__.py).
+- [Ba unit test CP3](starter_v0/tests/test_tools_todo.py) và [contract tests](starter_v0/tests/test_tool_contract.py).
+- [Bộ eval nhóm](starter_v0/data/eval_group.json) và [run G01/G09](starter_v0/runs/v3_B_group_gemini_20261110T224831464473.json).
+- Commit triển khai trên nhánh cá nhân [b66657a](https://github.com/congnt180263/K5-L3B-DAY03-E3-ResearchAgentToolEval/commit/b66657a6ac9f11aa5a73b079d27d3a06799369b4), commit tích hợp CP3 vào main [515b40f](https://github.com/congnt180263/K5-L3B-DAY03-E3-ResearchAgentToolEval/commit/515b40fd9de1aaba9eb4a733e45de0fef412ad92) và commit đồng bộ bằng chứng [8774f5b](https://github.com/congnt180263/K5-L3B-DAY03-E3-ResearchAgentToolEval/commit/8774f5b519e7dec3c246a646223ec78fed4a62be).
 
 ## Đồng Văn Quyến — 2A202603769
 
