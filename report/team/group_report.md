@@ -157,10 +157,9 @@ Chỉ điền nếu nhóm làm bonus (ghi riêng, tối đa 10 điểm). Tool c�
 |---|---|---|---|
 | Small Local Model | xem B7 |  |  |
 | Hơn 3 tool mới (≥ 4) |  |  |  |
-| `send` gửi thật lên Telegram sau xác nhận | transcript |  |  |
+| `send` gửi thật lên Telegram sau xác nhận | [`transcripts/telegram_live_session_20261111T093507611073.transcript.json`](../../starter_v0/transcripts/telegram_live_session_20261111T093507611073.transcript.json), case G06 trong [`runs/v3_B_group_gemini_20261110T224831464473.json`](../../starter_v0/runs/v3_B_group_gemini_20261110T224831464473.json) | **Hoàn thành trọn vẹn luồng gửi tin thật ra kênh Telegram riêng của nhóm sau khi người dùng xác nhận:**<br>1. **Turn 1:** Người dùng yêu cầu *"Tin tức AI hôm nay có gì ngắn gọn?"* → Agent tra cứu qua `lookup` và tổng hợp bản tin qua `format`.<br>2. **Turn 2:** Người dùng yêu cầu *"Đăng bản tin này lên Telegram giúp mình"* → Agent kích hoạt rào chắn an toàn, gọi `clarify(response_type="yes_no", question="Bạn có chắc chắn muốn đăng bản tin này lên Telegram không?")`, dừng luồng và chuyển trạng thái `waiting_for_user`, tuyệt đối KHÔNG tự ý gửi trước.<br>3. **Turn 3:** Người dùng xác nhận *"Có, mình đồng ý, hãy gửi đi"* → Agent gọi `send(confirmed=true, text="...")`, API bot Telegram gửi tin nhắn thành công lên channel với phản hồi `{"tool": "send_telegram", "status": "sent"}`.<br>Minh chứng đồng thời xuất hiện tại case `G06_send_after_confirmation` trong run suite group chính thức với kết quả `status: "sent"`. | **Rào chắn an toàn 2 lớp (Dual-layer Guardrail):**<br>1. *Lớp Prompt/Agent (System Prompt & Tools YAML):* Ràng buộc cứng: mọi yêu cầu gửi/đăng ra bên ngoài bắt buộc phải hỏi lại bằng `clarify(response_type="yes_no")` để chờ lệnh người dùng; cấm gọi `send` khi chưa có sự đồng ý tường minh từ lượt trước.<br>2. *Lớp Mã nguồn Tool (`send_telegram` trong `tools/send/tool.py`):* Kiểm tra logic code: nếu `confirmed == False` thì chặn đứng hoàn toàn, không gọi mạng mà trả về `{"status": "needs_confirmation"}`. Chỉ khi `confirmed == True` và có đủ token/chat_id hợp lệ trong `.env` thì mới thực thi gọi POST tới Telegram Bot API. |
 | Test challenge (0 skipped / regression test) | `pytest` output |  |  |
 
-Test challenge: số bug tìm được trong tool có sẵn (nếu có), cách sửa, và test regression tương ứng.
 
 ### B7. Small Local Model Challenge (bonus)
 
